@@ -1,0 +1,4 @@
+customtkinter
+sqlalchemy
+psycopg2
+tkcalendar

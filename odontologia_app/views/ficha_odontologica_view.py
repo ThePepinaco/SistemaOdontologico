@@ -161,9 +161,13 @@ def view_fichas_odontologicas(self, cliente_id):
             def guardar_cambios():
                 nueva_fecha = entries[0].get_date().strftime("%Y-%m-%d")
                 nuevo_tratamiento = entries[1].get()
-                nuevo_costo = float(entries[2].get() or 0)
-                nuevo_abono = float(entries[3].get() or 0)
-                nuevo_saldo = float(entries[4].get() or 0)
+                try:
+                    nuevo_costo = float(entries[3].get() or 0)
+                    nuevo_abono = float(entries[4].get() or 0)
+                    nuevo_saldo = float(entries[5].get() or 0)
+                except ValueError:
+                    showwarning("Error de entrada", "Por favor, asegúrate de que 'Costo' y 'Abono' sean números válidos.", parent=fichas_window)
+                    return
 
                 FichaOdontologicaController.actualizar_ficha(
                     ficha_id=ficha_id,
@@ -188,9 +192,13 @@ def view_fichas_odontologicas(self, cliente_id):
     
         fecha = date_entry.get_date().strftime("%Y-%m-%d")
         tratamiento = entries[1].get()
-        costo = float(entries[2].get() or 0)
-        abono = float(entries[3].get() or 0)
-        saldo = float(entries[4].get() or 0)
+        try:
+            costo = float(entries[3].get() or 0)
+            abono = float(entries[4].get() or 0)
+            saldo = float(entries[5].get() or 0)
+        except ValueError:
+            showwarning("Error de entrada", "Por favor, asegúrate de que 'Costo' y 'Abono' sean números válidos.", parent=fichas_window)
+            return
         
         # Lógica para agregar ficha a la base de datos
         FichaOdontologicaController.crear_ficha(

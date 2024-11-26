@@ -291,10 +291,13 @@ def view_otros_registros(self, cliente_id):
             )
 
     cargar_datos()
+    entrada_activa = None
 
     # Función para editar directamente en la columna "valor"
     def iniciar_edicion(event):
         """Inicia la edición de la celda seleccionada en 'valor'."""
+        global entrada_activa
+
         item = tree.selection()
         if not item:
             return
@@ -309,12 +312,13 @@ def view_otros_registros(self, cliente_id):
             return
 
         x, y, width, height = bbox
-        entry = ttk.Entry(tree)
-        entry.place(x=x, y=y, width=width, height=height)
-        entry.focus()
+        entrada_activa = ttk.Entry(tree)
+        entrada_activa.place(x=x, y=y, width=width, height=height)
+        entrada_activa.focus()
 
         def guardar_edicion(event):
-            nuevo_valor = entry.get()
+            global entrada_activa
+            nuevo_valor = entrada_activa.get()
             try:
                 if item_id == "resumen":
                     # Permitir texto libre para el campo "resumen"
@@ -332,16 +336,24 @@ def view_otros_registros(self, cliente_id):
 
             finally:
                 # Eliminar el campo de entrada
-                entry.destroy()
+                entrada_activa.destroy()
+                entrada_activa = None
 
-        entry.bind("<Return>", guardar_edicion)
-        entry.bind("<FocusOut>",guardar_edicion)
+        entrada_activa.bind("<Return>", guardar_edicion)
+        entrada_activa.bind("<FocusOut>", guardar_edicion)
 
     tree.bind("<Double-1>", iniciar_edicion)
 
-    # Función para guardar todos los cambios
+
+    # Función para guardar cambios
     def guardar_cambios():
         """Guardar los valores modificados en la base de datos."""
+        global entrada_activa
+
+        # Forzar cierre de cualquier edición activa
+        if entrada_activa is not None:
+            entrada_activa.event_generate("<Return>")  # Simular que el usuario presiona Enter
+
         if not valores_modificados:
             showinfo("Información", "No hay cambios para guardar.", parent=registros_window)
             return
@@ -505,12 +517,18 @@ def view_otros_registros(self, cliente_id):
             abono_entry.bind("<KeyRelease>", lambda event: calcular_saldo())
             # Función para guardar cambios
             def guardar_cambios():
+                
+
                 nueva_fecha = entries[0].get_date().strftime("%Y-%m-%d")
                 nueva_actividad = entries[1].get()
                 nuevo_brack = entries[2].get()
-                nuevo_costo = float(entries[3].get() or 0)
-                nuevo_abono = float(entries[4].get() or 0)
-                nuevo_saldo = float(entries[5].get() or 0)
+                try:
+                    nuevo_costo = float(entries_ficha[3].get() or 0)
+                    nuevo_abono = float(entries_ficha[4].get() or 0)
+                    nuevo_saldo = float(entries_ficha[5].get() or 0)
+                except ValueError:
+                    showwarning("Error de entrada", "Por favor, asegúrate de que 'Costo' y 'Abono' sean números válidos.", parent=registros_window)
+                    return
 
                 FichaOrtodonciaController.actualizar_ficha(
                     ficha_id=ficha_id,
@@ -533,14 +551,17 @@ def view_otros_registros(self, cliente_id):
 
     # Función para agregar una nueva ficha
     def agregar_ficha():
-    
+
         fecha = date_entry.get_date().strftime("%Y-%m-%d")
         actividad = entries_ficha[1].get()
         brack = entries_ficha[2].get()
-        costo = float(entries_ficha[3].get() or 0)
-        abono = float(entries_ficha[4].get() or 0)
-        saldo = float(entries_ficha[5].get() or 0)
-        
+        try:
+            costo = float(entries_ficha[3].get() or 0)
+            abono = float(entries_ficha[4].get() or 0)
+            saldo = float(entries_ficha[5].get() or 0)
+        except ValueError:
+            showwarning("Error de entrada", "Por favor, asegúrate de que 'Costo' y 'Abono' sean números válidos.", parent=registros_window)
+            return
         # Lógica para agregar ficha a la base de datos
         FichaOrtodonciaController.crear_ficha(
             cliente_id=cliente_id,

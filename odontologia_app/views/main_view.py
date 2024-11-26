@@ -10,40 +10,22 @@ class MainView(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
-        # Configuración de tamaño dinámico y responsivo
         self.title("Gestión Odontológica")
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-        window_width = int(screen_width * 0.8)
-        window_height = int(screen_height * 0.8)
-        
-        # Centrar la ventana
-        x = (screen_width - window_width) // 2
-        y = (screen_height - window_height) // 2
-        self.geometry(f"{window_width}x{window_height}+{x}+{y}")
-        
-        # Configurar grid para mejor responsividad
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_rowconfigure(0, weight=1)
+        self.geometry("800x750")
 
         # Marco para el formulario de creación
-        self.form_frame = customtkinter.CTkFrame(self, width=int(window_width * 0.4))
-        self.form_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.form_frame = customtkinter.CTkFrame(self, width=400)
+        self.form_frame.pack(side="left", fill="both", expand=True, padx=10, pady=10)
 
         # Marco para la lista de clientes
-        self.list_frame = customtkinter.CTkFrame(self, width=int(window_width * 0.4))
-        self.list_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
-
-        # Fuentes más grandes
-        self.large_font = ("Arial", 16)
-        self.medium_font = ("Arial", 14)
-        self.small_font = ("Arial", 12)
+        self.list_frame = customtkinter.CTkFrame(self, width=400)
+        self.list_frame.pack(side="right", fill="both", expand=True, padx=10, pady=10)
 
         self.create_form()
         self.create_list()
 
     def create_form(self):
+
         # Etiqueta del formulario
         form_label = customtkinter.CTkLabel(self.form_frame, text="Registrar Cliente", font=("Arial", 16))
         form_label.pack(pady=10)

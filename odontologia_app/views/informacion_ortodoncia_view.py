@@ -272,7 +272,7 @@ def view_otros_registros(self, cliente_id):
             modulo=start%2
             start+=1
             tag = "gray" if modulo == 0 else "darkgray"
-            informacion_envuelta = wrap_text(str(informacion), max_width=witdh_info*2)
+            informacion_envuelta = wrap_text(str(informacion), max_width=witdh_info*1.5)
             
             valor_actual =""
             if registros and atributo in registros.__dict__:

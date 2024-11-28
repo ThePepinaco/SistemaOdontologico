@@ -373,7 +373,7 @@ def view_otros_registros(self, cliente_id):
     guardar_button.pack(pady=10)
 
     tab_ficha = tabs.add("Fichas Ortodoncia")
-    label = customtkinter.CTkLabel(tab_ficha, text="Fichas Odontológicas", font=("Arial", 16))
+    label = customtkinter.CTkLabel(tab_ficha, text=f"Fichas Odontológicas de: {cliente.nombre}", font=("Arial", 16))
     label.pack(pady=10)
 
     # Frame para contener la tabla y el scrollbar
@@ -434,7 +434,7 @@ def view_otros_registros(self, cliente_id):
         # Cargar datos de la base de datos
         fichas = FichaOrtodonciaController.obtener_fichas_por_cliente(cliente_id)
         for ficha in fichas:
-            tag = "saldo_cero" if ficha.saldo == 0 else "saldo_no_cero"
+            tag = "saldo_cero" if ficha.saldo <= 0 else "saldo_no_cero"
             tree2.insert(
                 "",
                 "end",

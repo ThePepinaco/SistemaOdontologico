@@ -33,7 +33,7 @@ def view_fichas_odontologicas(self, cliente_id):
     saldo_total=0
     # Etiqueta para el título
     saldo_total_var = customtkinter.StringVar(value=f"Saldo total: {saldo_total:.2f}")
-    label = customtkinter.CTkLabel(fichas_window, text="Fichas Odontológicas", font=("Arial", 16))
+    label = customtkinter.CTkLabel(fichas_window, text=f"Fichas Odontológicas de: {cliente.nombre}", font=("Arial", 16))
     label.pack(pady=10)
     saldo_label = customtkinter.CTkLabel(fichas_window, textvariable=saldo_total_var, font=("Arial", 16))
     saldo_label.pack(pady=10)
@@ -60,7 +60,7 @@ def view_fichas_odontologicas(self, cliente_id):
     tree_ficha_odonto.column("abono", anchor="center", width=80)
     tree_ficha_odonto.column("saldo", anchor="center", width=80)
     tree_ficha_odonto.pack(side="left", fill="both", expand=True)
-
+    
     # Scrollbar vertical usando customtkinter
     scrollbar = customtkinter.CTkScrollbar(frame, orientation="vertical", command=tree_ficha_odonto.yview)
     scrollbar.pack(side="right", fill="y")
@@ -106,7 +106,7 @@ def view_fichas_odontologicas(self, cliente_id):
         ficha_id = int(selected_item[0])  # Obtener el ID (iid) del elemento
         ficha = FichaOdontologicaController.obtener_ficha_por_id(ficha_id)
         
-        saldo_var = customtkinter.StringVar(value=f"{ficha.saldo:.2f}")
+        saldo_var_fichas = customtkinter.StringVar(value=f"{ficha.saldo:.2f}")
         
         def calcular_saldo():
             """Actualiza el campo de saldo calculando costo - abono."""
@@ -114,9 +114,9 @@ def view_fichas_odontologicas(self, cliente_id):
                 costo = float(entries[2].get() or 0)
                 abono = float(entries[3].get() or 0)
                 saldo = costo - abono
-                saldo_var.set(f"{saldo:.2f}")  # Actualizar el saldo
+                saldo_var_fichas.set(f"{saldo:.2f}")  # Actualizar el saldo
             except ValueError:
-                saldo_var.set("0.00")
+                saldo_var_fichas.set("0.00")
         if ficha:
             # Crear ventana para editar la ficha
             editar_window = customtkinter.CTkToplevel(fichas_window)
@@ -143,7 +143,7 @@ def view_fichas_odontologicas(self, cliente_id):
                     date_entry.set_date(values[i])
                     entries.append(date_entry)
                 elif i==4:
-                    entry = customtkinter.CTkEntry(editar_window, textvariable=saldo_var, state="disabled")
+                    entry = customtkinter.CTkEntry(editar_window, textvariable=saldo_var_fichas, state="disabled")
                     entry.pack(pady=5)
                     entry.insert(0, str(values[i]))
                     entries.append(entry)
@@ -162,9 +162,9 @@ def view_fichas_odontologicas(self, cliente_id):
                 nueva_fecha = entries[0].get_date().strftime("%Y-%m-%d")
                 nuevo_tratamiento = entries[1].get()
                 try:
-                    nuevo_costo = float(entries[3].get() or 0)
-                    nuevo_abono = float(entries[4].get() or 0)
-                    nuevo_saldo = float(entries[5].get() or 0)
+                    nuevo_costo = float(entries[2].get() or 0)
+                    nuevo_abono = float(entries[3].get() or 0)
+                    nuevo_saldo = float(entries[4].get() or 0)
                 except ValueError:
                     showwarning("Error de entrada", "Por favor, asegúrate de que 'Costo' y 'Abono' sean números válidos.", parent=fichas_window)
                     return
@@ -193,9 +193,9 @@ def view_fichas_odontologicas(self, cliente_id):
         fecha = date_entry.get_date().strftime("%Y-%m-%d")
         tratamiento = entries[1].get()
         try:
-            costo = float(entries[3].get() or 0)
-            abono = float(entries[4].get() or 0)
-            saldo = float(entries[5].get() or 0)
+            costo = float(entries[2].get() or 0)
+            abono = float(entries[3].get() or 0)
+            saldo = float(entries[4].get() or 0)
         except ValueError:
             showwarning("Error de entrada", "Por favor, asegúrate de que 'Costo' y 'Abono' sean números válidos.", parent=fichas_window)
             return
@@ -216,7 +216,7 @@ def view_fichas_odontologicas(self, cliente_id):
         for entry in entries[1:]:  # Limpiar los campos (excepto la fecha)
             entry.delete(0, "end")
         date_entry.set_date(datetime.now())  # Restablecer la fecha a hoy
-        saldo_var.set("0.00")
+        saldo_var_fichas.set("0.00")
         
     def calcular_saldo():
         """Actualiza el campo de saldo calculando costo - abono."""
@@ -224,9 +224,9 @@ def view_fichas_odontologicas(self, cliente_id):
             costo = float(costo_entry.get() or 0)
             abono = float(abono_entry.get() or 0)
             saldo = costo - abono
-            saldo_var.set(f"{saldo:.2f}")  # Actualizar el valor del saldo
+            saldo_var_fichas.set(f"{saldo:.2f}")  # Actualizar el valor del saldo
         except ValueError:
-            saldo_var.set("0.00")
+            saldo_var_fichas.set("0.00")
     # Crear botones para eliminar y editar fichas
     botones_frame = customtkinter.CTkFrame(fichas_window)
     botones_frame.pack(pady=10)
@@ -236,28 +236,28 @@ def view_fichas_odontologicas(self, cliente_id):
 
     editar_button = customtkinter.CTkButton(botones_frame, text="Editar", command=editar_ficha)
     editar_button.grid(row=0, column=1, padx=10)
-        # Crear campos para agregar nueva ficha
-    form_frame = customtkinter.CTkFrame(fichas_window)
-    form_frame.pack(pady=10)
+    # Crear campos para agregar nueva ficha
+    form_frame_odntologia = customtkinter.CTkFrame(fichas_window)
+    form_frame_odntologia.pack(pady=10)
 
     labels = ["Fecha", "Tratamiento", "Costo", "Abono", "Saldo"]
     entries = []
-    saldo_var = customtkinter.StringVar(value="0.00")
+    saldo_var_fichas = customtkinter.StringVar(value="0.00")
     for i, label_text in enumerate(labels):
-        label = customtkinter.CTkLabel(form_frame, text=label_text)
+        label = customtkinter.CTkLabel(form_frame_odntologia, text=label_text)
         label.grid(row=0, column=i, padx=5)
         if i == 0:  # Campo de fecha con calendario
-            date_entry = DateEntry(form_frame, date_pattern="yyyy-mm-dd")
+            date_entry = DateEntry(form_frame_odntologia, date_pattern="yyyy-mm-dd")
             date_entry.grid(row=1, column=i, padx=5)
             date_entry.set_date(datetime.now())
             entries.append(date_entry)
         elif i==4:
-            entry = customtkinter.CTkEntry(form_frame, textvariable=saldo_var, state="disabled")
+            entry = customtkinter.CTkEntry(form_frame_odntologia, textvariable=saldo_var_fichas, state="disabled")
             entry.grid(row=1, column=i, padx=5)
             entries.append(entry)
             
         else:
-            entry = customtkinter.CTkEntry(form_frame)
+            entry = customtkinter.CTkEntry(form_frame_odntologia)
             entry.grid(row=1, column=i, padx=5)
             entries.append(entry)
     costo_entry = entries[2]

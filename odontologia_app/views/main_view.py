@@ -12,77 +12,93 @@ class MainView(customtkinter.CTk):
 
         self.title("Gestión Odontológica")
         self.geometry("800x750")
-
+        self.minsize(1000,400)
         # Marco para el formulario de creación
         self.form_frame = customtkinter.CTkFrame(self, width=400)
-        self.form_frame.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+        self.form_frame.pack(side="left", fill="both", expand=False, padx=10, pady=10)
 
         # Marco para la lista de clientes
         self.list_frame = customtkinter.CTkFrame(self, width=400)
         self.list_frame.pack(side="right", fill="both", expand=True, padx=10, pady=10)
 
+        self.large_font = ("Arial", 18, "bold")
+        self.medium_font = ("Arial", 16)
+        self.small_font = ("Arial", 14)
+        
         self.create_form()
         self.create_list()
 
     def create_form(self):
+        # Marco contenedor principal (usando grid para controlar posiciones)
+        container = customtkinter.CTkFrame(self.form_frame)
+        container.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Configuración del grid en el contenedor
+        container.grid_rowconfigure(0, weight=1)  # Frame desplazable ocupa espacio ajustable
+        container.grid_rowconfigure(1, weight=0)  # Espacio fijo para el botón
+        container.grid_columnconfigure(0, weight=1)  # Ajusta el ancho dinámicamente
+
+        # Marco para los datos desplazables
+        form_frame_datos = customtkinter.CTkScrollableFrame(container, width=200, height=600)
+        form_frame_datos.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
         # Etiqueta del formulario
-        form_label = customtkinter.CTkLabel(self.form_frame, text="Registrar Cliente", font=("Arial", 16))
+        form_label = customtkinter.CTkLabel(form_frame_datos, text="Registrar Cliente", font=self.large_font)
         form_label.pack(pady=10)
 
         # Campos de información personal
-        self.nombre_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Nombre")
+        self.nombre_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Nombre", font=self.medium_font)
         self.nombre_entry.pack(pady=5)
 
-        self.edad_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Edad")
+        self.edad_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Edad", font=self.medium_font)
         self.edad_entry.pack(pady=5)
 
-        self.direccion_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Dirección")
+        self.direccion_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Dirección", font=self.medium_font)
         self.direccion_entry.pack(pady=5)
 
-        self.telefono_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Teléfono")
+        self.telefono_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Teléfono", font=self.medium_font)
         self.telefono_entry.pack(pady=5)
         
-        self.cedula_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Cédula")
+        self.cedula_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Cédula", font=self.medium_font)
         self.cedula_entry.pack(pady=5)
-        
+
         # Campos médicos como entradas de texto
-        medical_label = customtkinter.CTkLabel(self.form_frame, text="Información Médica", font=("Arial", 14))
+        medical_label = customtkinter.CTkLabel(form_frame_datos, text="Información Médica", font=self.large_font)
         medical_label.pack(pady=10)
 
-        self.alergias_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Alergias (especificar)")
+        self.alergias_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Alergias (especificar)", font=self.medium_font)
         self.alergias_entry.pack(pady=5)
 
-        self.medicamentos_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Medicamentos Actuales")
+        self.medicamentos_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Medicamentos Actuales", font=self.medium_font)
         self.medicamentos_entry.pack(pady=5)
 
-        self.hemorragias_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Hemorragias (Sí/No)")
+        self.hemorragias_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Hemorragias (Sí/No)", font=self.medium_font)
         self.hemorragias_entry.pack(pady=5)
 
-        self.problemas_cardiacos_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Problemas Cardíacos (Sí/No)")
+        self.problemas_cardiacos_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Problemas Cardíacos (Sí/No)", font=self.medium_font)
         self.problemas_cardiacos_entry.pack(pady=5)
 
-        self.diabetes_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Diabetes (Sí/No)")
+        self.diabetes_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Diabetes (Sí/No)", font=self.medium_font)
         self.diabetes_entry.pack(pady=5)
 
-        self.hipertension_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Hipertensión (Sí/No)")
+        self.hipertension_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Hipertensión (Sí/No)", font=self.medium_font)
         self.hipertension_entry.pack(pady=5)
         
-        self.alergia_medicamentos_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Alergía a medicamentos (Sí/No)")
+        self.alergia_medicamentos_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Alergía a medicamentos (Sí/No)", font=self.medium_font)
         self.alergia_medicamentos_entry.pack(pady=5)
 
-        self.embarazo_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Embarazo (Sí/No)")
+        self.embarazo_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Embarazo (Sí/No)", font=self.medium_font)
         self.embarazo_entry.pack(pady=5)
 
-        self.anestesia_previa_entry = customtkinter.CTkEntry(self.form_frame, placeholder_text="Anestesia previa (Sí/No)")
+        self.anestesia_previa_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Anestesia previa (Sí/No)", font=self.medium_font)
         self.anestesia_previa_entry.pack(pady=5)
 
-        self.anemia_entry= customtkinter.CTkEntry(self.form_frame, placeholder_text="Anemia (Sí/No)")
+        self.anemia_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Anemia (Sí/No)", font=self.medium_font)
         self.anemia_entry.pack(pady=5)
 
-        # Botón para guardar el cliente
-        save_button = customtkinter.CTkButton(self.form_frame, text="Guardar Cliente", command=self.save_cliente)
-        save_button.pack(pady=20)
+        # Botón para guardar el cliente (fuera del scrollable frame)
+        save_button = customtkinter.CTkButton(container, text="Guardar Cliente", command=self.save_cliente, font=self.medium_font)
+        save_button.grid(row=1, column=0, sticky="ew", padx=10, pady=10)  # Ocupa toda la fila en el contenedor
 
     def create_list(self):
         # Crear un estilo personalizado para el Treeview
@@ -96,13 +112,17 @@ class MainView(customtkinter.CTk):
                         rowheight=25,
                         fieldbackground="#343638",
                         bordercolor="#343638",
-                        borderwidth=0)
+                        borderwidth=0,
+                        font=self.small_font)
         style.map('Treeview', background=[('selected', '#22559b')])
 
         style.configure("Treeview.Heading",
                         background="#565b5e",
                         foreground="white",
-                        relief="flat")
+                        relief="flat",
+                        rowheight=40,
+                        font=self.small_font,
+                        padding=(1, 10))
         style.map("Treeview.Heading",
                     background=[('active', '#3484F0')])
 
@@ -115,57 +135,62 @@ class MainView(customtkinter.CTk):
         search_cedula_frame = customtkinter.CTkFrame(search_frame)
         search_cedula_frame.pack(side="left", padx=10)
 
-        search_cedula_label = customtkinter.CTkLabel(search_cedula_frame, text="Buscar por Cédula", font=("Arial", 16))
+        search_cedula_label = customtkinter.CTkLabel(search_cedula_frame, text="Buscar por Cédula", font=self.large_font)
         search_cedula_label.pack(pady=5)
 
-        self.search_cedula_entry = customtkinter.CTkEntry(search_cedula_frame, placeholder_text="Cédula")
+        self.search_cedula_entry = customtkinter.CTkEntry(search_cedula_frame, placeholder_text="Cédula", font=self.medium_font)
         self.search_cedula_entry.pack(pady=5)
 
-        search_cedula_button = customtkinter.CTkButton(search_cedula_frame, text="Buscar", command=self.search_cliente_by_cedula)
+        search_cedula_button = customtkinter.CTkButton(search_cedula_frame, text="Buscar", command=self.search_cliente_by_cedula, font=self.medium_font)
         search_cedula_button.pack(pady=5)
 
         # Marco para búsqueda por nombre (derecha)
         search_nombre_frame = customtkinter.CTkFrame(search_frame)
         search_nombre_frame.pack(side="right", padx=10)
 
-        search_nombre_label = customtkinter.CTkLabel(search_nombre_frame, text="Buscar por Nombre", font=("Arial", 16))
+        search_nombre_label = customtkinter.CTkLabel(search_nombre_frame, text="Buscar por Nombre", font=self.large_font)
         search_nombre_label.pack(pady=5)
 
-        self.search_nombre_entry = customtkinter.CTkEntry(search_nombre_frame, placeholder_text="Nombre")
+        self.search_nombre_entry = customtkinter.CTkEntry(search_nombre_frame, placeholder_text="Nombre", font=self.medium_font)
         self.search_nombre_entry.pack(pady=5)
 
-        search_nombre_button = customtkinter.CTkButton(search_nombre_frame, text="Buscar", command=self.search_cliente)
+        search_nombre_button = customtkinter.CTkButton(search_nombre_frame, text="Buscar", command=self.search_cliente, font=self.medium_font)
         search_nombre_button.pack(pady=5)
-    
+        
+        search_nombre_button = customtkinter.CTkButton(self.list_frame, text="Restablecer", command=self.update_list, font=self.medium_font)
+        search_nombre_button.pack(pady=5)
+        s_saldo= ttk.Style() 
+        s_saldo.configure('saldo.Treeview.Heading', rowheight=45)
         # Tabla de clientes
-        self.tree = ttk.Treeview(
+        self.tree_principal = ttk.Treeview(
             self.list_frame,
             columns=("id", "numero", "nombre", "cedula","saldo_odontologico","saldo_ortodoncia"),
             show="headings",
-            height=15,
             style="Treeview",
         )
-        self.tree.heading("numero", text="#")
-        self.tree.heading("nombre", text="Nombre")
-        self.tree.heading("cedula", text="Cédula")
-        self.tree.heading("saldo_odontologico", text="Saldo odontologico")
-        self.tree.heading("saldo_ortodoncia", text="Saldo Ortodoncia")
-        self.tree.column("id", width=0, stretch="no")  # Columna oculta para el ID
-        self.tree.column("numero", anchor="center", width=50)
-        self.tree.column("nombre", anchor="w", width=300)
-        self.tree.column("cedula", anchor="center", width=150)
-        self.tree.column("saldo_odontologico", anchor="center", width=50)
-        self.tree.column("saldo_ortodoncia", anchor="center", width=50)
-        self.tree["displaycolumns"]=("numero", "nombre", "cedula","saldo_odontologico","saldo_ortodoncia")
-        
+        self.tree_principal.heading("numero", text="#")
+        self.tree_principal.heading("nombre", text="Nombre")
+        self.tree_principal.heading("cedula", text="Cédula")
+        self.tree_principal.heading("saldo_odontologico", text="Saldo Od.")
+        self.tree_principal.heading("saldo_ortodoncia", text="Saldo Or.")
+        self.tree_principal.column("id", width=0, stretch="no")  # Columna oculta para el ID
+        self.tree_principal.column("numero", anchor="center", width=50, stretch="no")
+        self.tree_principal.column("nombre", anchor="w", width=250)
+        self.tree_principal.column("cedula", anchor="center", width=170, stretch="no")
+        self.tree_principal.column("saldo_odontologico", anchor="center", width=100, stretch="no")
+        self.tree_principal.column("saldo_ortodoncia", anchor="center", width=100, stretch="no")
+        self.tree_principal["displaycolumns"]=("numero", "nombre", "cedula","saldo_odontologico","saldo_ortodoncia")
+        self.tree_principal.tag_configure("gray", background="#363a3b")  #  gray
+        self.tree_principal.tag_configure("darkgray", background="#2a2d2e")  #  darkray
         # Crear scrollbar vertical
-        tree_scrollbar = customtkinter.CTkScrollbar(self.list_frame, orientation="vertical", command=self.tree.yview)
+        tree_scrollbar = customtkinter.CTkScrollbar(self.list_frame, orientation="vertical", command=self.tree_principal.yview)
         tree_scrollbar.pack(side="right", fill="y")  # Colocarlo a la derecha del Treeview
-        self.tree.configure(yscrollcommand=tree_scrollbar.set)
+        self.tree_principal.configure(yscrollcommand=tree_scrollbar.set)
+        
         # Empaquetar Treeview
-        self.tree.pack(pady=10, side="left", fill="both", expand=True)
+        self.tree_principal.pack(pady=10, side="left", fill="both", expand=True)
         # Asociar doble clic para mostrar detalles
-        self.tree.bind("<Double-1>", self.show_details)
+        self.tree_principal.bind("<Double-1>", self.show_details)
 
         self.update_list()
         # Inicializar la lista
@@ -235,16 +260,21 @@ class MainView(customtkinter.CTk):
         showinfo("Éxito", "Cliente guardado correctamente.")
         self.update_list()  # Actualizar lista
         self.clear_form()   # Limpiar formulario
-        
+
     def update_list(self):
-        
+        self.tree_principal.tag_configure("saldo_cero", background="#59C07A")  # Verde claro
+        self.tree_principal.tag_configure("saldo_no_cero", background="#DD4151")  # Rojo claro
         # Limpiar lista
-        for row in self.tree.get_children():
-            self.tree.delete(row)
+        for row in self.tree_principal.get_children():
+            self.tree_principal.delete(row)
         # Obtener clientes del controlador
         clientes = ClienteController.obtener_clientes()
+        start=2
         for idx, cliente in enumerate(clientes, start=1):
-            self.tree.insert("", "end", values=(cliente.id, idx, cliente.nombre, cliente.cedula, cliente.saldo_total_od, cliente.saldo_total_or))
+            modulo=start%2
+            start+=1
+            tag = "gray" if modulo == 0 else "darkgray"
+            self.tree_principal.insert("", "end", values=(cliente.id, idx, cliente.nombre, cliente.cedula, cliente.saldo_total_od, cliente.saldo_total_or), tags=(tag,))
 
     def search_cliente_by_cedula(self):
         cedula = self.search_cedula_entry.get()
@@ -254,9 +284,13 @@ class MainView(customtkinter.CTk):
 
         # Filtrar clientes por cédula
         clientes = ClienteController.buscar_por_cedula(cedula)
-        self.tree.delete(*self.tree.get_children())  # Limpiar tabla actual
+        self.tree_principal.delete(*self.tree_principal.get_children())  # Limpiar tabla actual
+        start=2
         for idx, cliente in enumerate(clientes, start=1):
-            self.tree.insert("", "end", values=(cliente.id, idx, cliente.nombre, cliente.cedula, cliente.saldo_total_od, cliente.saldo_total_or))
+            modulo=start%2
+            start+=1
+            tag = "gray" if modulo == 0 else "darkgray"
+            self.tree_principal.insert("", "end", values=(cliente.id, idx, cliente.nombre, cliente.cedula, cliente.saldo_total_od, cliente.saldo_total_or), tags=(tag,))
 
     def search_cliente(self):
         nombre = self.search_nombre_entry.get()
@@ -266,18 +300,22 @@ class MainView(customtkinter.CTk):
 
         # Filtrar clientes por nombre
         clientes = ClienteController.buscar_por_nombre(nombre)
-        self.tree.delete(*self.tree.get_children())  # Limpiar tabla actual
+        self.tree_principal.delete(*self.tree_principal.get_children())  # Limpiar tabla actual
+        start=2
         for idx, cliente in enumerate(clientes, start=1):
-            self.tree.insert("", "end", values=(cliente.id, idx, cliente.nombre, cliente.cedula, cliente.saldo_total_od, cliente.saldo_total_or))
+            modulo=start%2
+            start+=1
+            tag = "gray" if modulo == 0 else "darkgray"
+            self.tree_principal.insert("", "end", values=(cliente.id, idx, cliente.nombre, cliente.cedula, cliente.saldo_total_od, cliente.saldo_total_or), tags=(tag,))
 
     def show_details(self, event):
         # Obtener la selección actual
-        selected_item = self.tree.selection()
+        selected_item = self.tree_principal.selection()
         if not selected_item:
             return  # Salir si no hay ningún elemento seleccionado
 
         # Obtener el id del cliente desde la primera columna (oculta)
-        values = self.tree.item(selected_item, "values")
+        values = self.tree_principal.item(selected_item, "values")
         if not values or len(values) < 1:
             return
 
@@ -292,7 +330,8 @@ class MainView(customtkinter.CTk):
         # Crear ventana para mostrar detalles
         details_window = customtkinter.CTkToplevel(self)
         details_window.title(f"Detalles de {cliente.nombre}")
-        details_window.geometry("600x600")
+        details_window.geometry("670x620")
+        details_window.minsize(630,550)
 
         # Crear un frame con scroll
         scroll_frame = customtkinter.CTkScrollableFrame(
@@ -314,7 +353,7 @@ class MainView(customtkinter.CTk):
             label_widget = customtkinter.CTkLabel(
                 row_frame,
                 text=f"{label}:",
-                font=("Arial", 14, "bold"),
+                font=self.large_font,
                 width=150
             )
             label_widget.pack(side="left", padx=5)
@@ -322,7 +361,7 @@ class MainView(customtkinter.CTk):
             value_widget = customtkinter.CTkLabel(
                 row_frame,
                 text=str(value),
-                font=("Arial", 14),
+                font=self.medium_font,
                 wraplength=200,  # Permite que el texto largo se envuelva
                 justify="left"
             )
@@ -353,21 +392,24 @@ class MainView(customtkinter.CTk):
         edit_button = customtkinter.CTkButton(
             button_frame,
             text="Editar Cliente",
-            command=lambda: self.edit_cliente(cliente.id, details_window)
+            command=lambda: self.edit_cliente(cliente.id, details_window),
+            font=self.medium_font
         )
         edit_button.pack(side="left", padx=5, expand=True)
 
         odontologia_button = customtkinter.CTkButton(
             button_frame,
             text="Ver Fichas Odontológicas",
-            command=lambda: view_fichas_odontologicas(self, cliente.id)
+            command=lambda: view_fichas_odontologicas(self, cliente.id),
+            font=self.medium_font
         )
         odontologia_button.pack(side="left", padx=5, expand=True)
 
         other_button = customtkinter.CTkButton(
             button_frame,
             text="Ver Fichas Ortodoncia",
-            command=lambda: view_otros_registros(self, cliente.id)
+            command=lambda: view_otros_registros(self, cliente.id),
+            font=self.medium_font
         )
         other_button.pack(side="left", padx=5, expand=True)
 
@@ -375,7 +417,8 @@ class MainView(customtkinter.CTk):
         close_button = customtkinter.CTkButton(
             details_window,
             text="Cerrar",
-            command=details_window.destroy
+            command=details_window.destroy,
+            font=self.medium_font
         )
         close_button.pack(pady=10)
 
@@ -383,12 +426,26 @@ class MainView(customtkinter.CTk):
     def edit_cliente(self, cliente, parent_window):
         parent_window.destroy()  # Cerrar la ventana de detalles
         cliente = ClienteController.obtener_cliente_por_id(cliente)
+        
         # Crear ventana de edición
         edit_window = customtkinter.CTkToplevel(self)
         edit_window.title(f"Editar Cliente: {cliente.nombre}")
         edit_window.geometry("500x750")
+        edit_window.minsize(450,300)
+        container_editar = customtkinter.CTkFrame(edit_window)
+        container_editar.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Configuración del grid en el contenedor
+        container_editar.grid_rowconfigure(0, weight=1)  # Frame desplazable ocupa espacio ajustable
+        container_editar.grid_rowconfigure(1, weight=0)  # Espacio fijo para el botón
+        container_editar.grid_columnconfigure(0, weight=1)  # Ajusta el ancho dinámicamente
+
+        # Marco para los datos desplazables
+        form_frame_editar = customtkinter.CTkScrollableFrame(container_editar, width=200, height=600)
+        form_frame_editar.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+
         # Crear un marco para organizar los campos
-        form_frame = customtkinter.CTkFrame(edit_window)
+        form_frame = customtkinter.CTkFrame(form_frame_editar)
         form_frame.pack(pady=20, padx=20, fill="both", expand=True)
 
         # Función auxiliar para crear etiquetas y entradas
@@ -398,13 +455,13 @@ class MainView(customtkinter.CTk):
             row_frame.pack(pady=5, fill="x")
 
             # Entrada de texto
-            entry = customtkinter.CTkEntry(row_frame)
+            entry = customtkinter.CTkEntry(row_frame, font=self.medium_font)
             entry.insert(0, initial_value)
-            entry.pack(side="left", padx=5, fill="x", expand=True)
+            entry.pack(side="right", padx=5, fill="x", expand=True)
 
             # Etiqueta a la derecha
-            label = customtkinter.CTkLabel(row_frame, text=label_text)
-            label.pack(side="right", padx=5)
+            label = customtkinter.CTkLabel(row_frame, text=label_text, font=self.medium_font)
+            label.pack(side="left", padx=5)
 
             return entry
 
@@ -427,7 +484,7 @@ class MainView(customtkinter.CTk):
 
         # Botón para guardar cambios
         save_button = customtkinter.CTkButton(
-            edit_window,
+            container_editar,
             text="Guardar Cambios",
             command=lambda: self.save_edits(
                 cliente.id,
@@ -447,14 +504,14 @@ class MainView(customtkinter.CTk):
                 anestesia_previa_entry.get(),
                 medicamentos_entry.get(),
                 edit_window
-            )
+            ), font=self.medium_font
         )
-        save_button.pack(pady=10)
-
+        #save_button.pack(pady=10)
+        save_button.grid(row=1, column=0, sticky="ew", padx=10, pady=10) 
         # Botón para cerrar la ventana sin guardar
-        close_button = customtkinter.CTkButton(edit_window, text="Cancelar", command=edit_window.destroy)
-        close_button.pack(pady=10)
-
+        close_button = customtkinter.CTkButton(container_editar, text="Cancelar", command=edit_window.destroy, font=self.medium_font)
+        #close_button.pack(pady=10)
+        close_button.grid(row=2, column=0, sticky="ew", padx=10, pady=10) 
     def save_edits(self, cliente_id, nombre, edad, direccion, telefono, cedula, alergias, hemorragias, problemas_cardiacos, diabetes, hipertension, anemia, alergia_medicamentos, embarazo, anestesia_previa, medicamentos, edit_window):
         # Validar entrada
         if not nombre or not edad or not direccion or not cedula:

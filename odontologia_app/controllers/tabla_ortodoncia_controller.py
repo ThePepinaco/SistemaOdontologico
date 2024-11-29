@@ -11,7 +11,7 @@ class TablaOrtodonciaController:
 
             
     @staticmethod
-    def actualizar_campos(cliente_id, valores):
+    def actualizar_campos(cliente_id, valores,resumen):
         """
         Actualiza múltiples campos en la tabla ortodoncia en una sola transacción.
         :param cliente_id: ID del cliente.
@@ -28,5 +28,6 @@ class TablaOrtodonciaController:
             
             for campo, nuevo_valor in valores.items():
                 setattr(registro, campo, nuevo_valor)
+            setattr(registro,"resumen", resumen)
             session.commit()
 

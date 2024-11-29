@@ -15,16 +15,26 @@ def view_otros_registros(self, cliente_id):
     registros_window = customtkinter.CTkToplevel(self)
     cliente = ClienteController.obtener_cliente_por_id(cliente_id)
     registros_window.title(f"Ortodoncia de {cliente.nombre}")
-    registros_window.geometry("1450x750")
+    registros_window.geometry("1280x730")
+    registros_window.minsize(1280,550)
     registros_window.attributes('-topmost', True)
     registros_window.after(100, lambda: registros_window.attributes('-topmost', False))
+    large_font = ("Arial", 18, "bold")
+    medium_font = ("Arial", 16)
+    small_font = ("Arial", 12)
     # Crear los tabs
     tabs = customtkinter.CTkTabview(registros_window, width=900, height=650)
     tabs.pack(padx=10, pady=10, fill="both", expand=True)
-
+    tabs._segmented_button.configure(font=medium_font)
     # Tab de Información Ortodoncia
     tab_informacion = tabs.add("Información Ortodoncia")
-
+    container_datos_or = customtkinter.CTkFrame(tab_informacion)
+    container_datos_or.pack(fill="both", expand=True, padx=10, pady=10)
+    
+    # Configuración del grid en el contenedor
+    container_datos_or.grid_rowconfigure(0, weight=1)  # Frame desplazable ocupa espacio ajustable
+    container_datos_or.grid_rowconfigure(1, weight=0)  # Espacio fijo para el botón
+    container_datos_or.grid_columnconfigure(0, weight=1)  # Ajusta el ancho dinámicamente
     # Obtener información de ortodoncia existente
     informacion = InformacionOrtodonciaController.obtener_por_cliente(cliente_id)
 
@@ -33,10 +43,10 @@ def view_otros_registros(self, cliente_id):
         """Crea una fila con etiquetas y campos de entrada."""
         for col, (label_text, var_name) in enumerate(labels_entries):
             if var_name != "":
-                label = customtkinter.CTkLabel(frame, text=label_text)
-                label.grid(row=start_row, column=col * 2, padx=5, pady=5, sticky="w")
+                label = customtkinter.CTkLabel(frame, text=label_text, font=medium_font)
+                label.grid(row=start_row, column=col * 2, padx=5, pady=5, sticky="e")
 
-                entry = customtkinter.CTkEntry(frame)
+                entry = customtkinter.CTkEntry(frame, font=medium_font)
                 entry.grid(row=start_row, column=col * 2 + 1, padx=5, pady=5, sticky="ew")
 
                 # Rellenar automáticamente si existe información
@@ -47,91 +57,99 @@ def view_otros_registros(self, cliente_id):
 
                 entries[var_name] = entry
             else:
-                label = customtkinter.CTkLabel(frame, text=label_text)
-                label.grid(row=start_row, column=col * 2, padx=5, pady=5, sticky="w")
+                label = customtkinter.CTkLabel(frame, text=label_text, font=medium_font)
+                label.grid(row=start_row, column=col * 2, padx=5, pady=5, sticky="e")
 
     # Marco para las entradas de Información Ortodoncia
     entries = {}  # Almacenar referencias a los campos de entrada
-    info_frame = customtkinter.CTkFrame(tab_informacion)
-    info_frame.pack(fill="both", expand=True, padx=10, pady=10)
-
+    info_frame = customtkinter.CTkScrollableFrame(container_datos_or)
+    info_frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+     # Configuración para centrar las columnas
+    for col in range(6):  # Ajusta según la cantidad máxima de columnas necesarias
+        info_frame.grid_columnconfigure(col, weight=1)
     # Distribuir los campos en filas lógicas
-    create_row(info_frame, [("Hábitos", "habitos"),
-                            ("Medicamentos", "medicamentos"),
-                            ("Respiración", "respiracion"),
-                            ("Frenillo Labial", "frenillo_labial")
+    create_row(info_frame, [("Hábitos:", "habitos"),
+                            ("Medicamentos:", "medicamentos"),
+                            ("Respiración:", "respiracion")
                             ], 0)
-
-    create_row(info_frame, [("Tercio Aumentado", "tercio_aumentado"),
-                            ("Cierre Labial", "cierre_labial"),
-                            ("Posición Lengua", "posicion_lengua")
+    create_row(info_frame, [("Frenillo Labial:", "frenillo_labial"),
+                            ("Tercio Aumentado:", "tercio_aumentado"),
+                            ("Cierre Labial:", "cierre_labial"),
                             ], 1)
 
-    create_row(info_frame, [("Estudios Modelos:", "")], 2)
+    create_row(info_frame, [("Posición Lengua:", "posicion_lengua")
+                            ], 2)
 
-    create_row(info_frame, [("Compresión", "em_compresion"),
-                            ("Expansión", "em_expansion"),
-                            ("Normal", "em_normal")
+    create_row(info_frame, [("Estudios Modelos:", "")
                             ], 3)
+
+    create_row(info_frame, [("Compresión:", "em_compresion"),
+                            ("Expansión:", "em_expansion"),
+                            ("Normal:", "em_normal")
+                            ], 4)
 
     create_row(info_frame, [("Sentido Sagital: Maxilar superior", ""),
                             ("", ""),
                             ("Sentido Sagital: Maxilar inferior", "")
-                            ], 4)
-
-    create_row(info_frame, [("Prostusión-Retrusión Incisivo", "ss_ms_pr_incisivo"),
-                            ("", ""),
-                            ("Prostusión-Retrusión Incisivo", "ss_mi_pr_incisivo")
                             ], 5)
 
-    create_row(info_frame, [("Migración de", "migragacion"),
-                            ("Piezas Ausentes por Extracción", "piezas_auesentes_extraccion"),
-                            ("No Erupción", "no_erupcion")
+    create_row(info_frame, [("Prostusión-Retrusión Incisivo:", "ss_ms_pr_incisivo"),
+                            ("", ""),
+                            ("Prostusión-Retrusión Incisivo:", "ss_mi_pr_incisivo")
                             ], 6)
 
-    create_row(info_frame, [("Sentido Vertical: Maxilar superior", "")], 7)
+    create_row(info_frame, [("Migración de:", "migragacion"),
+                            ("Piezas Ausentes por Extracción:", "piezas_auesentes_extraccion"),
+                            ("No Erupción:", "no_erupcion")
+                            ], 7)
 
-    create_row(info_frame, [("Piezas Intruidas", "sv_ms_piezas_intruidas"),
-                            ("Piezas Extruidas", "sv_ms_piezas_extruidas"),
-                            ("Piezas Sumergidas", "sv_ms_piezas_sumergidas")
+    create_row(info_frame, [("Sentido Vertical: Maxilar superior", "")
                             ], 8)
 
-    create_row(info_frame, [("Sentido Vertical: Maxilar inferior", "")], 9)
+    create_row(info_frame, [("Piezas Intruidas:", "sv_ms_piezas_intruidas"),
+                            ("Piezas Extruidas:", "sv_ms_piezas_extruidas"),
+                            ("Piezas Sumergidas:", "sv_ms_piezas_sumergidas")
+                            ], 9)
 
-    create_row(info_frame, [("Piezas Intruidas", "sv_mi_piezas_intruidas"),
-                            ("Piezas Extruidas", "sv_mi_piezas_extruidas"),
-                            ("Piezas Sumergidas", "sv_mi_piezas_sumergidas")
+    create_row(info_frame, [("Sentido Vertical: Maxilar inferior", "")
                             ], 10)
 
-    create_row(info_frame, [("Terceros Molares Superior", "terceros_molares_superior"),
-                            ("Terceros Molares Inferior", "terceros_molares_inferior")
+    create_row(info_frame, [("Piezas Intruidas:", "sv_mi_piezas_intruidas"),
+                            ("Piezas Extruidas:", "sv_mi_piezas_extruidas"),
+                            ("Piezas Sumergidas:", "sv_mi_piezas_sumergidas")
                             ], 11)
 
-    create_row(info_frame, [("Oclusión: Mordida Abierta", "oclusion_mordida_abierta"),
-                            ("Mordida Profunda", "oclusion_mordida_profunda"),
-                            ("Mordida Normal", "oclusion_mordida_normal")
+    create_row(info_frame, [("Terceros Molares Superior:", "terceros_molares_superior"),
+                            ("Terceros Molares Inferior:", "terceros_molares_inferior")
                             ], 12)
 
-    create_row(info_frame, [("Resalte u Overejet", "resalte_overejet"),
-                            ("Overvite o Escalón", "overvite_escalon"),
-                            ("Línea Media Central", "linea_media_central")
+    create_row(info_frame, [("Oclusión: Mordida Abierta:", "oclusion_mordida_abierta"),
+                            ("Mordida Profunda:", "oclusion_mordida_profunda"),
+                            ("Mordida Normal:", "oclusion_mordida_normal")
                             ], 13)
 
-    create_row(info_frame, [("Laterales Derecha RM", "laterales_derecha_rm"),
-                            ("Laterales Derecha RC", "laterales_derecha_rc"),
-                            ("Laterales Derecha Cruzada", "laterales_derecha_cruzada"),
-                            ("Laterales Derecha Vis a Vis", "laterales_derecha_vis_a_vis")
+    create_row(info_frame, [("Resalte u Overejet:", "resalte_overejet"),
+                            ("Overvite o Escalón:", "overvite_escalon"),
+                            ("Línea Media Central:", "linea_media_central")
                             ], 14)
 
-    create_row(info_frame, [("Laterales Izquierda RM", "laterales_izquierda_rm"),
-                            ("Laterales Izquierda RC", "laterales_izquierda_rc"),
-                            ("Laterales Izquierda Cruzada", "laterales_izquierda_cruzada"),
-                            ("Laterales Izquierda Vis a Vis", "laterales_izquierda_vis_a_vis")
+    create_row(info_frame, [("Laterales Derecha RM:", "laterales_derecha_rm"),
+                            ("Laterales Derecha RC:", "laterales_derecha_rc")
                             ], 15)
+    create_row(info_frame, [("Laterales Derecha Cruzada:", "laterales_derecha_cruzada"),
+                            ("Laterales Derecha Vis a Vis:", "laterales_derecha_vis_a_vis")
+                            ], 16)
+
+    create_row(info_frame, [("Laterales Izquierda RM:", "laterales_izquierda_rm"),
+                            ("Laterales Izquierda RC:", "laterales_izquierda_rc")
+                            ], 17)
+    create_row(info_frame, [("Laterales Izquierda Cruzada:", "laterales_izquierda_cruzada"),
+                            ("Laterales Izquierda Vis a Vis:", "laterales_izquierda_vis_a_vis")
+                            ], 18)
 
     # Botones para guardar o cancelar
-    button_frame = customtkinter.CTkFrame(tab_informacion)
-    button_frame.pack(pady=10)
+    button_frame = customtkinter.CTkFrame(container_datos_or)
+    button_frame.grid(row=1, column=0, sticky="", padx=10, pady=10)
 
     def guardar_informacion():
         # Recolectar datos de los campos
@@ -140,23 +158,29 @@ def view_otros_registros(self, cliente_id):
         InformacionOrtodonciaController.guardar_o_actualizar(cliente_id, **data)
         showinfo("Éxito", "Información Ortodoncia guardada correctamente.", parent=registros_window)
 
-    guardar_button = customtkinter.CTkButton(button_frame, text="Guardar", command=guardar_informacion)
+    guardar_button = customtkinter.CTkButton(button_frame, text="Guardar", command=guardar_informacion, font=medium_font)
     guardar_button.pack(side="left", padx=10)
 
-    cancelar_button = customtkinter.CTkButton(button_frame, text="Cancelar", command=registros_window.destroy)
+    cancelar_button = customtkinter.CTkButton(button_frame, text="Cancelar", command=registros_window.destroy, font=medium_font)
     cancelar_button.pack(side="right", padx=10)
     
 
     tab_tabla = tabs.add("Tabla Ortodoncia")
-
+    container_tabla_or = customtkinter.CTkFrame(tab_tabla)
+    container_tabla_or.pack(fill="both", expand=True, padx=10, pady=10)
+    
+    # Configuración del grid en el contenedor
+    container_tabla_or.grid_rowconfigure(0, weight=1)  # Frame desplazable ocupa espacio ajustable
+    container_tabla_or.grid_rowconfigure(1, weight=0)  # Espacio fijo para el botón
+    container_tabla_or.grid_columnconfigure(0, weight=1)  # Ajusta el ancho dinámicamente
     # Frame para contener la tabla y el scrollbar
-    frame = customtkinter.CTkFrame(tab_tabla)
-    frame.pack(fill="both", expand=True, padx=10, pady=10)
+    frame_tree_or = customtkinter.CTkFrame(container_tabla_or)
+    frame_tree_or.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
     s= ttk.Style() 
-    s.configure('ortodoncia.Treeview', rowheight=45)
+    s.configure('ortodoncia.Treeview', rowheight=45, font=small_font)
     # Crear tabla para la ortodoncia
     tree = ttk.Treeview(
-        frame,
+        frame_tree_or,
         columns=("campo", "norma", "desviacion", "valor", "informacion"),
         show="headings",
         style="ortodoncia.Treeview"
@@ -169,18 +193,17 @@ def view_otros_registros(self, cliente_id):
     tree.heading("valor", text="VALOR ")
     tree.heading("informacion", text="INTERPRETACIÓN")
 
-    tree.column("campo", anchor="w", width=200)
-    tree.column("norma", anchor="center", width=50)
-    tree.column("desviacion", anchor="center", width=30)
-    tree.column("valor", anchor="center", width=witdh_valor)
+    tree.column("campo", anchor="w", width=300,stretch="no")
+    tree.column("norma", anchor="center", width=100,stretch="no")
+    tree.column("desviacion", anchor="center", width=90,stretch="no")
+    tree.column("valor", anchor="center", width=90, stretch="no")
     tree.column("informacion", anchor="w", width=witdh_info)
     tree.pack(side="left", fill="both", expand=True)
 
     # Scrollbar vertical usando customtkinter
-    scrollbar = customtkinter.CTkScrollbar(frame, orientation="vertical", command=tree.yview)
+    scrollbar = customtkinter.CTkScrollbar(frame_tree_or, orientation="vertical", command=tree.yview)
     scrollbar.pack(side="right", fill="y")
     tree.configure(yscrollcommand=scrollbar.set)
-
     # Diccionario para almacenar los valores modificados temporalmente
     valores_modificados = {}
 
@@ -196,7 +219,7 @@ def view_otros_registros(self, cliente_id):
         ("U Incisivo Inclinación(U1-APo) (°)", "28.0", "4.0", "u_incisivo_inclinacio", ">indica proclinacion del incisivo superior. <retroinclinacion del incisivo superior "),
         ("L1-A-PO (°)", "27.7", "4.0", "l1_a_po", ">Proclinacion del inc. inf (clase III) ver por compensaci < retro inclinación del inc.inf Clase II ver compensación"),
         ("OCCL PLANO-FH (°)", "7.5", "5.0", "occl_plano_fh", ">mordida abierta < mordida profunda (Downs)"),
-        ("U6 PT Vertical (mm)", "21 Masculino - 18 Femenino", "+-3mm", "u6_pt_vertical", "Determina si la maloclusion es causada por la posición del primer molar superior"),
+        ("U6 PT Vertical (mm)", "21 Masculino\n18 Femenino", "+-3mm", "u6_pt_vertical", "Determina si la maloclusion es causada por la posición del primer molar superior"),
         ("Convexidad (A-NPo) (mm)", "2.8", "2.0", "convexidad", ">perfil convexo .clase II esqueletal <perfil cóncavo .clase II esqueletal"),
         ("Arco Mandíbula (°)", "34.7", "4.0", "arco_mandibula", ">rotac del mentón hacia arriba y delante (rama larga) < rotación del mentón habia abajo y atrás (rama corta)"),
         ("FMA (MP-FH) (°)", "22.9", "4.5", "fma", ">crecimiento mandibular hiperdivergente < crecimiento mandibular hipordivergente (Tweed)"),
@@ -209,7 +232,7 @@ def view_otros_registros(self, cliente_id):
         ("Rama Posición (°)", "77.5", "3.0", "rama_posicion", ">ubicac anterior de la rama, puede manifest en claseIII < ubicacion posterior de la rama, puede manif en clase III"),
         ("Lower Face Height (ANS-Xi-Pm) (°) Altura", "44.5", "4.0", "lower_face_height", ">valores altos indica mordida abierta esquelética < valores bajos mordidas profundas"),
         ("Lower Lip-Plano E (mm)", "-2.0", "2.0", "lower_lip_plano_e", "Se analiza el labio y el perfil línea E (posición de in sup)"),
-        ("Resumen", "", "", "resumen", ""),
+        ("", "", "", "resumen", ""),
     ]
     tree.tag_configure("gray", background="#363a3b")  #  gray
     tree.tag_configure("darkgray", background="#2a2d2e")  #  darkray
@@ -269,35 +292,50 @@ def view_otros_registros(self, cliente_id):
         registros = TablaOrtodonciaController.obtener_por_cliente(cliente_id)
         start=2
         for campo, norma, desviacion, atributo, informacion in datos_ortodoncia:
-            modulo=start%2
-            start+=1
-            tag = "gray" if modulo == 0 else "darkgray"
-            informacion_envuelta = wrap_text(str(informacion), max_width=witdh_info*1.5)
-            
-            valor_actual =""
-            if registros and atributo in registros.__dict__:
-                    value = registros.__dict__[atributo]
-                    if value is not None:
-                        valor_actual = value
-                    else:
-                        valor_actual = ""
-            valor_actual = wrap_text(str(valor_actual), max_width=witdh_valor*3)
-            tree.insert(
-                "",
-                "end",
-                values=(campo, norma, desviacion, valor_actual, informacion_envuelta),
-                iid=atributo,  # Identificador único basado en el atributo
-                tags=(tag,)
-            )
-
+            if atributo!="resumen":
+                modulo=start%2
+                start+=1
+                tag = "gray" if modulo == 0 else "darkgray"
+                informacion_envuelta = wrap_text(str(informacion), max_width=witdh_info*1.5)
+                
+                valor_actual =""
+                if registros and atributo in registros.__dict__:
+                        value = registros.__dict__[atributo]
+                        
+                        if value is not None:
+                            valor_actual = value
+                        else:
+                            valor_actual = ""
+                valor_actual = wrap_text(str(valor_actual), max_width=witdh_valor*3)
+                tree.insert(
+                    "",
+                    "end",
+                    values=(campo, norma, desviacion, valor_actual, informacion_envuelta),
+                    iid=atributo,  # Identificador único basado en el atributo
+                    tags=(tag,)
+                )
+            else:
+                if registros and atributo in registros.__dict__:
+                        value = registros.__dict__[atributo]
+                        
+                        if value is not None:
+                            resumen_entry.insert(0, str(value))
+                        else:
+                            valor_actual = ""
+                
+    label_resumen = customtkinter.CTkLabel(container_tabla_or, text="Resumen", font=medium_font)
+    label_resumen.grid(row=1, column=0, sticky="", padx=10, pady=10)
+    resumen_entry = customtkinter.CTkEntry(container_tabla_or, font=medium_font)
+    resumen_entry.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)
     cargar_datos()
-    entrada_activa = None
+    global entrada_activa
+    entrada_activa= None
 
     # Función para editar directamente en la columna "valor"
     def iniciar_edicion(event):
         """Inicia la edición de la celda seleccionada en 'valor'."""
         global entrada_activa
-
+        
         item = tree.selection()
         if not item:
             return
@@ -312,7 +350,7 @@ def view_otros_registros(self, cliente_id):
             return
 
         x, y, width, height = bbox
-        entrada_activa = ttk.Entry(tree)
+        entrada_activa = ttk.Entry(tree, font=medium_font)
         entrada_activa.place(x=x, y=y, width=width, height=height)
         entrada_activa.focus()
 
@@ -353,27 +391,29 @@ def view_otros_registros(self, cliente_id):
         # Forzar cierre de cualquier edición activa
         if entrada_activa is not None:
             entrada_activa.event_generate("<Return>")  # Simular que el usuario presiona Enter
-
-        if not valores_modificados:
+        resumen = resumen_entry.get()
+        if not valores_modificados and not resumen:
             showinfo("Información", "No hay cambios para guardar.", parent=registros_window)
             return
 
-        TablaOrtodonciaController.actualizar_campos(cliente_id=cliente_id, valores=valores_modificados)
+        # Actualizar la base de datos con los cambios y el resumen
+        TablaOrtodonciaController.actualizar_campos(cliente_id=cliente_id, valores=valores_modificados, resumen=resumen)
 
         showinfo("Éxito", "Todos los cambios han sido guardados.", parent=registros_window)
         cargar_datos()  # Recargar la tabla
         valores_modificados.clear()
 
     # Botón para guardar todos los cambios
-    guardar_button = customtkinter.CTkButton(
-        tab_tabla,
+    guardar_button_tabla_or = customtkinter.CTkButton(
+        container_tabla_or,
         text="Guardar Cambios",
-        command=guardar_cambios
+        command=guardar_cambios, font=medium_font
     )
-    guardar_button.pack(pady=10)
-
+    guardar_button_tabla_or.grid(row=3, column=0, sticky="", padx=10, pady=10)
+    
     tab_ficha = tabs.add("Fichas Ortodoncia")
-    label = customtkinter.CTkLabel(tab_ficha, text=f"Fichas Odontológicas de: {cliente.nombre}", font=("Arial", 16))
+   
+    label = customtkinter.CTkLabel(tab_ficha, text=f"Fichas Odontológicas de: {cliente.nombre}", font=large_font)
     label.pack(pady=10)
 
     # Frame para contener la tabla y el scrollbar
@@ -396,12 +436,21 @@ def view_otros_registros(self, cliente_id):
         return saldo_total
     saldo_total=0
     saldo_total_var = customtkinter.StringVar(value=f"Saldo total: {saldo_total:.2f}")
-    saldo_label = customtkinter.CTkLabel(frame, textvariable=saldo_total_var, font=("Arial", 16))
+    saldo_label = customtkinter.CTkLabel(frame, textvariable=saldo_total_var, font=medium_font)
     saldo_label.pack(pady=10)
     calcular_saldo_total()
+    container_tab_ficha = customtkinter.CTkFrame(tab_ficha)
+    container_tab_ficha.pack(fill="both", expand=True, padx=10, pady=10)
+    
+    # Configuración del grid en el contenedor
+    container_tab_ficha.grid_rowconfigure(0, weight=1)  # Frame desplazable ocupa espacio ajustable
+    container_tab_ficha.grid_rowconfigure(1, weight=0)  # Espacio fijo para el botón
+    container_tab_ficha.grid_columnconfigure(0, weight=1) 
+    frame_tree_ficha_or = customtkinter.CTkFrame(container_tab_ficha)
+    frame_tree_ficha_or.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
     # Tabla para mostrar las fichas
     tree2 = ttk.Treeview(
-        frame,
+        frame_tree_ficha_or,
         columns=("fecha","brack", "actividad", "costo", "abono", "saldo"),
         show="headings",
         height=10
@@ -412,16 +461,16 @@ def view_otros_registros(self, cliente_id):
     tree2.heading("costo", text="Costo")
     tree2.heading("abono", text="Abono")
     tree2.heading("saldo", text="Saldo")
-    tree2.column("fecha", anchor="center", width=100)
+    tree2.column("fecha", anchor="center", width=120, stretch="no")
     tree2.column("actividad", anchor="w", width=200)
     tree2.column("brack", anchor="center", width=80)
-    tree2.column("costo", anchor="center", width=80)
-    tree2.column("abono", anchor="center", width=80)
-    tree2.column("saldo", anchor="center", width=80)
+    tree2.column("costo", anchor="center", width=100, stretch="no")
+    tree2.column("abono", anchor="center", width=100, stretch="no")
+    tree2.column("saldo", anchor="center", width=110, stretch="no")
     tree2.pack(side="left", fill="both", expand=True)
 
     # Scrollbar vertical usando customtkinter
-    scrollbar = customtkinter.CTkScrollbar(frame, orientation="vertical", command=tree2.yview)
+    scrollbar = customtkinter.CTkScrollbar(frame_tree_ficha_or, orientation="vertical", command=tree2.yview)
     scrollbar.pack(side="right", fill="y")
     tree2.configure(yscrollcommand=scrollbar.set)
     tree2.tag_configure("saldo_cero", background="#59C07A")  # Verde claro
@@ -433,6 +482,7 @@ def view_otros_registros(self, cliente_id):
             tree2.delete(row)
         # Cargar datos de la base de datos
         fichas = FichaOrtodonciaController.obtener_fichas_por_cliente(cliente_id)
+        
         for ficha in fichas:
             tag = "saldo_cero" if ficha.saldo <= 0 else "saldo_no_cero"
             tree2.insert(
@@ -478,7 +528,8 @@ def view_otros_registros(self, cliente_id):
             # Crear ventana para editar la ficha
             editar_window = customtkinter.CTkToplevel(tab_ficha)
             editar_window.title("Editar Ficha Odontológica")
-            editar_window.geometry("400x500")
+            editar_window.geometry("400x600")
+            editar_window.minsize(400,600)
 
             # Crear campos para editar
             labels = ["Fecha", "Actividad","Brack", "Costo", "Abono", "Saldo"]
@@ -493,21 +544,21 @@ def view_otros_registros(self, cliente_id):
             entries = []
 
             for i, label_text in enumerate(labels):
-                label = customtkinter.CTkLabel(editar_window, text=label_text)
+                label = customtkinter.CTkLabel(editar_window, text=label_text, font=medium_font)
                 label.pack(pady=5)
                 if i == 0:  # Campo de fecha con calendario
-                    date_entry = DateEntry(editar_window, date_pattern="yyyy-mm-dd")
+                    date_entry = DateEntry(editar_window, date_pattern="yyyy-mm-dd", font=small_font)
                     date_entry.pack(pady=5)
                     date_entry.set_date(values[i])
                     entries.append(date_entry)
                 elif i==5:
-                    entry = customtkinter.CTkEntry(editar_window, textvariable=saldo_var, state="disabled")
+                    entry = customtkinter.CTkEntry(editar_window, textvariable=saldo_var, state="disabled", font=medium_font)
                     entry.pack(pady=5)
                     entry.insert(0, str(values[i]))
                     entries.append(entry)
                     
                 else:
-                    entry = customtkinter.CTkEntry(editar_window)
+                    entry = customtkinter.CTkEntry(editar_window, font=medium_font)
                     entry.pack(pady=5)
                     entry.insert(0, str(values[i]))
                     entries.append(entry)
@@ -543,10 +594,10 @@ def view_otros_registros(self, cliente_id):
                 calcular_saldo_total()
                 editar_window.destroy()
 
-            guardar_button = customtkinter.CTkButton(editar_window, text="Guardar", command=guardar_cambios)
+            guardar_button = customtkinter.CTkButton(editar_window, text="Guardar", command=guardar_cambios, font=medium_font)
             guardar_button.pack(pady=10)
 
-            cancelar_button = customtkinter.CTkButton(editar_window, text="Cancelar", command=editar_window.destroy)
+            cancelar_button = customtkinter.CTkButton(editar_window, text="Cancelar", command=editar_window.destroy, font=medium_font)
             cancelar_button.pack(pady=10)
 
     # Función para agregar una nueva ficha
@@ -591,36 +642,36 @@ def view_otros_registros(self, cliente_id):
         except ValueError:
             saldo_var.set("0.00")
     # Crear botones para eliminar y editar fichas
-    botones_frame = customtkinter.CTkFrame(tab_ficha)
-    botones_frame.pack(pady=10)
+    botones_frame = customtkinter.CTkFrame(container_tab_ficha)
+    botones_frame.grid(row=1, column=0, sticky="", padx=10, pady=10)
 
-    eliminar_button = customtkinter.CTkButton(botones_frame, text="Eliminar", command=eliminar_ficha, fg_color="#F24236")
+    eliminar_button = customtkinter.CTkButton(botones_frame, text="Eliminar", command=eliminar_ficha, fg_color="#F24236", font=medium_font)
     eliminar_button.grid(row=0, column=0, padx=10)
 
-    editar_button = customtkinter.CTkButton(botones_frame, text="Editar", command=editar_ficha)
+    editar_button = customtkinter.CTkButton(botones_frame, text="Editar", command=editar_ficha, font=medium_font)
     editar_button.grid(row=0, column=1, padx=10)
         # Crear campos para agregar nueva ficha
-    form_frame = customtkinter.CTkFrame(tab_ficha)
-    form_frame.pack(pady=10)
+    form_frame = customtkinter.CTkFrame(container_tab_ficha)
+    form_frame.grid(row=2, column=0, sticky="", padx=10, pady=10)
 
     labels = ["Fecha", "Actividad", "Brack", "Costo", "Abono", "Saldo"]
     entries_ficha = []
     saldo_var = customtkinter.StringVar(value="0.00")
     for i, label_text in enumerate(labels):
-        label = customtkinter.CTkLabel(form_frame, text=label_text)
+        label = customtkinter.CTkLabel(form_frame, text=label_text, font=medium_font)
         label.grid(row=0, column=i, padx=5)
         if i == 0:  # Campo de fecha con calendario
-            date_entry = DateEntry(form_frame, date_pattern="yyyy-mm-dd")
+            date_entry = DateEntry(form_frame, date_pattern="yyyy-mm-dd", font=small_font)
             date_entry.grid(row=1, column=i, padx=5)
             date_entry.set_date(datetime.now())
             entries_ficha.append(date_entry)
         elif i==5:
-            entry = customtkinter.CTkEntry(form_frame, textvariable=saldo_var, state="disabled")
+            entry = customtkinter.CTkEntry(form_frame, textvariable=saldo_var, state="disabled", font=medium_font)
             entry.grid(row=1, column=i, padx=5)
             entries_ficha.append(entry)
             
         else:
-            entry = customtkinter.CTkEntry(form_frame)
+            entry = customtkinter.CTkEntry(form_frame, font=medium_font)
             entry.grid(row=1, column=i, padx=5)
             entries_ficha.append(entry)
     costo_entry = entries_ficha[3]
@@ -629,5 +680,5 @@ def view_otros_registros(self, cliente_id):
     costo_entry.bind("<KeyRelease>", lambda event: calcular_saldo())
     abono_entry.bind("<KeyRelease>", lambda event: calcular_saldo())
     # Botón para agregar ficha
-    add_button = customtkinter.CTkButton(tab_ficha, text="Agregar Ficha", command=agregar_ficha)
-    add_button.pack(pady=10)
+    add_button = customtkinter.CTkButton(container_tab_ficha, text="Agregar Ficha", command=agregar_ficha, font=medium_font)
+    add_button.grid(row=3, column=0, sticky="", padx=10, pady=10)

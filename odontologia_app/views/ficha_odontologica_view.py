@@ -17,9 +17,9 @@ def view_fichas_odontologicas(self, cliente_id):
     fichas_window.after(100, lambda: fichas_window.attributes('-topmost', False))
 
         
-    self.large_font = ("Arial", 18, "bold")
-    self.medium_font = ("Arial", 16)
-    self.small_font = ("Arial", 12)
+    medium_font = ("Arial", 18, "bold")
+    medium_font = ("Arial", 16)
+    medium_font = ("Arial", 12)
     
     
     def calcular_saldo_total():
@@ -41,7 +41,7 @@ def view_fichas_odontologicas(self, cliente_id):
     saldo_total=0
     # Etiqueta para el título
     saldo_total_var = customtkinter.StringVar(value=f"Saldo total: {saldo_total:.2f}")
-    label = customtkinter.CTkLabel(fichas_window, text=f"Fichas Odontológicas de: {cliente.nombre}", font=self.large_font)
+    label = customtkinter.CTkLabel(fichas_window, text=f"Fichas Odontológicas de: {cliente.nombre}", font=medium_font)
     label.pack(pady=10)
     saldo_label = customtkinter.CTkLabel(fichas_window, textvariable=saldo_total_var, font=("Arial", 16))
     saldo_label.pack(pady=10)
@@ -153,21 +153,21 @@ def view_fichas_odontologicas(self, cliente_id):
             entries = []
 
             for i, label_text in enumerate(labels):
-                label = customtkinter.CTkLabel(editar_window, text=label_text, font=self.medium_font)
+                label = customtkinter.CTkLabel(editar_window, text=label_text, font=medium_font)
                 label.pack(pady=5)
                 if i == 0:  # Campo de fecha con calendario
-                    date_entry = DateEntry(editar_window, date_pattern="yyyy-mm-dd", font=self.small_font)
+                    date_entry = DateEntry(editar_window, date_pattern="yyyy-mm-dd", font=medium_font)
                     date_entry.pack(pady=5)
                     date_entry.set_date(values[i])
                     entries.append(date_entry)
                 elif i==4:
-                    entry = customtkinter.CTkEntry(editar_window, textvariable=saldo_var_fichas, state="disabled", font=self.medium_font)
+                    entry = customtkinter.CTkEntry(editar_window, textvariable=saldo_var_fichas, state="disabled", font=medium_font)
                     entry.pack(pady=5)
                     entry.insert(0, str(values[i]))
                     entries.append(entry)
                     
                 else:
-                    entry = customtkinter.CTkEntry(editar_window, font=self.medium_font)
+                    entry = customtkinter.CTkEntry(editar_window, font=medium_font)
                     entry.pack(pady=5)
                     entry.insert(0, str(values[i]))
                     entries.append(entry)
@@ -199,10 +199,10 @@ def view_fichas_odontologicas(self, cliente_id):
                 calcular_saldo_total()
                 editar_window.destroy()
 
-            guardar_button = customtkinter.CTkButton(editar_window, text="Guardar", command=guardar_cambios, font=self.medium_font)
+            guardar_button = customtkinter.CTkButton(editar_window, text="Guardar", command=guardar_cambios, font=medium_font)
             guardar_button.pack(pady=10)
 
-            cancelar_button = customtkinter.CTkButton(editar_window, text="Cancelar", command=editar_window.destroy, font=self.medium_font)
+            cancelar_button = customtkinter.CTkButton(editar_window, text="Cancelar", command=editar_window.destroy, font=medium_font)
             cancelar_button.pack(pady=10)
 
     # Función para agregar una nueva ficha
@@ -249,10 +249,10 @@ def view_fichas_odontologicas(self, cliente_id):
     botones_frame = customtkinter.CTkFrame(container_ficha_odo)
     botones_frame.grid(row=1, column=0, sticky="", padx=10, pady=10)
 
-    eliminar_button = customtkinter.CTkButton(botones_frame, text="Eliminar", command=eliminar_ficha, fg_color="#F24236", font=self.medium_font)
+    eliminar_button = customtkinter.CTkButton(botones_frame, text="Eliminar", command=eliminar_ficha, fg_color="#F24236", font=medium_font)
     eliminar_button.grid(row=0, column=0, padx=10)
 
-    editar_button = customtkinter.CTkButton(botones_frame, text="Editar", command=editar_ficha, font=self.medium_font)
+    editar_button = customtkinter.CTkButton(botones_frame, text="Editar", command=editar_ficha, font=medium_font)
     editar_button.grid(row=0, column=1, padx=10)
     # Crear campos para agregar nueva ficha
     form_frame_odntologia = customtkinter.CTkFrame(container_ficha_odo)
@@ -262,20 +262,20 @@ def view_fichas_odontologicas(self, cliente_id):
     entries = []
     saldo_var_fichas = customtkinter.StringVar(value="0.00")
     for i, label_text in enumerate(labels):
-        label = customtkinter.CTkLabel(form_frame_odntologia, text=label_text, font=self.medium_font)
+        label = customtkinter.CTkLabel(form_frame_odntologia, text=label_text, font=medium_font)
         label.grid(row=0, column=i, padx=5)
         if i == 0:  # Campo de fecha con calendario
-            date_entry = DateEntry(form_frame_odntologia, date_pattern="yyyy-mm-dd", font=self.small_font)
+            date_entry = DateEntry(form_frame_odntologia, date_pattern="yyyy-mm-dd", font=medium_font)
             date_entry.grid(row=1, column=i, padx=5)
             date_entry.set_date(datetime.now())
             entries.append(date_entry)
         elif i==4:
-            entry = customtkinter.CTkEntry(form_frame_odntologia, textvariable=saldo_var_fichas, state="disabled", font=self.medium_font)
+            entry = customtkinter.CTkEntry(form_frame_odntologia, textvariable=saldo_var_fichas, state="disabled", font=medium_font)
             entry.grid(row=1, column=i, padx=5)
             entries.append(entry)
             
         else:
-            entry = customtkinter.CTkEntry(form_frame_odntologia, font=self.medium_font)
+            entry = customtkinter.CTkEntry(form_frame_odntologia, font=medium_font)
             entry.grid(row=1, column=i, padx=5)
             entries.append(entry)
     costo_entry = entries[2]
@@ -284,8 +284,8 @@ def view_fichas_odontologicas(self, cliente_id):
     costo_entry.bind("<KeyRelease>", lambda event: calcular_saldo())
     abono_entry.bind("<KeyRelease>", lambda event: calcular_saldo())
     # Botón para agregar ficha
-    add_button = customtkinter.CTkButton(container_ficha_odo, text="Agregar Ficha", command=agregar_ficha, font=self.medium_font)
+    add_button = customtkinter.CTkButton(container_ficha_odo, text="Agregar Ficha", command=agregar_ficha, font=medium_font)
     add_button.grid(row=3, column=0, sticky="", padx=10, pady=10)
     # Botón para cerrar
-    close_button = customtkinter.CTkButton(container_ficha_odo, text="Cerrar", command=fichas_window.destroy, font=self.medium_font)
+    close_button = customtkinter.CTkButton(container_ficha_odo, text="Cerrar", command=fichas_window.destroy, font=medium_font)
     close_button.grid(row=4, column=0, sticky="", padx=10, pady=10)

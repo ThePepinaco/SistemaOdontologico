@@ -4,6 +4,7 @@ import customtkinter
 from controllers.cliente_controller import ClienteController
 from controllers.ficha_odontologica_controller import FichaOdontologicaController
 from controllers.ficha_ortodoncia_controller import FichaOrtodonciaController
+from controllers.responsable_controller import ResponsableController
 from .informacion_ortodoncia_view import view_otros_registros
 from .ficha_odontologica_view import view_fichas_odontologicas
 class MainView(customtkinter.CTk):
@@ -230,8 +231,8 @@ class MainView(customtkinter.CTk):
         anemia = self.anemia_entry.get()
 
         # Validar entrada
-        if not nombre or not edad or not direccion or not cedula:
-            showwarning("Error", "Por favor completa los campos obligatorios (Nombre, edad, dirección y cédula).")
+        if not nombre or not edad:
+            showwarning("Error", "Por favor completa los campos obligatorios (Nombre, edad).")
             return
         if not edad.isdigit():
             showwarning("Error", "La edad debe ser un número.")
@@ -412,7 +413,15 @@ class MainView(customtkinter.CTk):
             font=self.medium_font
         )
         other_button.pack(side="left", padx=5, expand=True)
-
+        
+        responsable_button = customtkinter.CTkButton(
+            details_window,
+            text="Ver Responsable",
+            command=lambda: self.resposable_edit_view(cliente.id, details_window),
+            font=self.medium_font
+        )
+        responsable_button.pack(pady=10)
+        
         # Botón para cerrar
         close_button = customtkinter.CTkButton(
             details_window,
@@ -514,8 +523,8 @@ class MainView(customtkinter.CTk):
         close_button.grid(row=2, column=0, sticky="ew", padx=10, pady=10) 
     def save_edits(self, cliente_id, nombre, edad, direccion, telefono, cedula, alergias, hemorragias, problemas_cardiacos, diabetes, hipertension, anemia, alergia_medicamentos, embarazo, anestesia_previa, medicamentos, edit_window):
         # Validar entrada
-        if not nombre or not edad or not direccion or not cedula:
-            showwarning("Error", "Por favor completa los campos obligatorios (Nombre, edad, dirección y cédula).", parent=edit_window)
+        if not nombre or not edad:
+            showwarning("Error", "Por favor completa los campos obligatorios (Nombre, edad).", parent=edit_window)
             return
         if not edad.isdigit():
             showwarning("Error", "La edad debe ser un número.", parent=edit_window)
@@ -544,3 +553,121 @@ class MainView(customtkinter.CTk):
         showinfo("Éxito", "Cliente actualizado correctamente.",  parent=edit_window)
         self.update_list()  # Actualizar la lista de clientes
         edit_window.destroy()  # Cerrar la ventana de edición
+        
+            # Métodos adicionales para los botones
+    def resposable_edit_view(self, cliente, parent_window):
+        
+        responsable = ResponsableController.obtener_responsable_por_id(cliente)
+        cliente = ClienteController.obtener_cliente_por_id(cliente)
+        
+        if responsable is None:
+            responsable = type('Responsable', (object,), {
+                'nombre': '',
+                'edad': '',
+                'direccion': '',
+                'telefono': '',
+                'cedula': '',
+                'correo': ''
+            })()
+        
+        # Crear ventana de edición
+        responsable_window = customtkinter.CTkToplevel(self)
+        responsable_window.title(f"Responsable de: {cliente.nombre}")
+        responsable_window.geometry("500x750")
+        responsable_window.minsize(450,300)
+        responsable_window.attributes('-topmost', True)
+        responsable_window.after(100, lambda: responsable_window.attributes('-topmost', False))
+        container_editar = customtkinter.CTkFrame(responsable_window)
+        container_editar.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Configuración del grid en el contenedor
+        container_editar.grid_rowconfigure(0, weight=1)  # Frame desplazable ocupa espacio ajustable
+        container_editar.grid_rowconfigure(1, weight=0)  # Espacio fijo para el botón
+        container_editar.grid_columnconfigure(0, weight=1)  # Ajusta el ancho dinámicamente
+
+        # Marco para los datos desplazables
+        form_frame_editar = customtkinter.CTkScrollableFrame(container_editar, width=200, height=600)
+        form_frame_editar.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+
+        # Crear un marco para organizar los campos
+        form_frame = customtkinter.CTkFrame(form_frame_editar)
+        form_frame.pack(pady=20, padx=20, fill="both", expand=True)
+
+        # Función auxiliar para crear etiquetas y entradas
+        def create_labeled_entry(frame, label_text, initial_value):
+            # Contenedor para cada fila
+            row_frame = customtkinter.CTkFrame(frame)
+            row_frame.pack(pady=5, fill="x")
+
+            # Entrada de texto
+            entry = customtkinter.CTkEntry(row_frame, font=self.medium_font)
+            entry.insert(0, initial_value)
+            entry.pack(side="right", padx=5, fill="x", expand=True)
+
+            # Etiqueta a la derecha
+            label = customtkinter.CTkLabel(row_frame, text=label_text, font=self.medium_font)
+            label.pack(side="left", padx=5)
+
+            return entry
+
+        # Crear los campos con etiquetas
+        nombre_entry = create_labeled_entry(form_frame, "Nombre", responsable.nombre)
+        edad_entry = create_labeled_entry(form_frame, "Edad", str(responsable.edad))
+        direccion_entry = create_labeled_entry(form_frame, "Dirección", responsable.direccion )
+        telefono_entry = create_labeled_entry(form_frame, "Teléfono", responsable.telefono )
+        cedula_entry = create_labeled_entry(form_frame, "Cédula", responsable.cedula)
+        correo_entry = create_labeled_entry(form_frame, "Correo electrónico", responsable.correo)
+        # Botón para guardar cambios
+        save_button = customtkinter.CTkButton(
+            container_editar,
+            text="Guardar Cambios",
+            command=lambda: self.save_responsable(
+                cliente.id,
+                nombre_entry.get(),
+                edad_entry.get(),
+                direccion_entry.get(),
+                telefono_entry.get(),
+                cedula_entry.get(),
+                correo_entry.get(),
+                responsable_window
+            ), font=self.medium_font
+        )
+        #save_button.pack(pady=10)
+        save_button.grid(row=1, column=0, sticky="ew", padx=10, pady=10) 
+        # Botón para cerrar la ventana sin guardar
+        close_button = customtkinter.CTkButton(container_editar, text="Cancelar", command=responsable_window.destroy, font=self.medium_font)
+        #close_button.pack(pady=10)
+        close_button.grid(row=2, column=0, sticky="ew", padx=10, pady=10) 
+    def save_responsable(self, cliente_id, nombre, edad, direccion, telefono, cedula, correo, responsable_window):
+        # Validar entrada
+        if not edad.isdigit():
+            showwarning("Error", "La edad debe ser un número.", parent=responsable_window)
+            return
+
+        # Verificar si ya existe un responsable
+        responsable = ResponsableController.obtener_responsable_por_id(cliente_id)
+
+        if responsable:
+            # Actualizar responsable existente
+            ResponsableController.actualizar_responsable(
+                cliente_id=cliente_id,
+                nombre=nombre,
+                edad=int(edad),
+                direccion=direccion,
+                telefono=telefono,
+                cedula=cedula,
+                correo=correo
+            )
+            showinfo("Éxito", "Responsable actualizado correctamente.", parent=responsable_window)
+        else:
+            # Crear un nuevo responsable
+            ResponsableController.crear_responsable(
+                cliente_id=cliente_id,
+                nombre=nombre,
+                edad=int(edad),
+                direccion=direccion,
+                telefono=telefono,
+                cedula=cedula,
+                correo=correo
+            )
+            showinfo("Éxito", "Responsable creado correctamente.", parent=responsable_window)

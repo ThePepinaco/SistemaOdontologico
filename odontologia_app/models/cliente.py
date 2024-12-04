@@ -6,11 +6,11 @@ from sqlalchemy.orm import relationship
 class Cliente(Base):
     __tablename__ = "clientes"
     id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String, nullable=False)
-    edad = Column(Integer, nullable=False)
+    nombre = Column(String, nullable=True)
+    edad = Column(Integer, nullable=True)
     direccion = Column(String, nullable=True)
     telefono = Column(String, nullable=True)
-    cedula = Column(String, unique=True, nullable=False)
+    cedula = Column(String, nullable=True)
     # Campos médicos
     alergias = Column(String, nullable=True)
     hemorragias = Column(String, nullable=True)
@@ -30,3 +30,4 @@ class Cliente(Base):
     informacion_ortodoncia = relationship("InformacionOrtodoncia", back_populates="cliente", uselist=False)
     tabla_ortodoncia = relationship("TablaOrtodoncia", back_populates="cliente", uselist=False)
     ficha_ortodoncia = relationship("FichaOrtodoncia", back_populates="cliente", uselist=False)
+    responsable = relationship("Responsable", back_populates="cliente", uselist=False)

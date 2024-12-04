@@ -16,4 +16,5 @@ def init_db():
     from models.ficha_ortodoncia import FichaOrtodoncia
     from models.informacion_ortodoncia import InformacionOrtodoncia
     from models.tabla_ortodoncia import TablaOrtodoncia
+    from models.responsable import Responsable
     Base.metadata.create_all(bind=engine)

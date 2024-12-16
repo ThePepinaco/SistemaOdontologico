@@ -75,7 +75,7 @@ class FichaOrtodonciaController:
             saldo_total = session.query(FichaOrtodoncia)\
                 .filter(FichaOrtodoncia.cliente_id == cliente_id)\
                 .with_entities(
-                    (FichaOrtodoncia.costo - FichaOrtodoncia.abono).label("saldo")
+                    (FichaOrtodoncia.abono - FichaOrtodoncia.costo).label("saldo")
                 )\
                 .all()
             # Calcular el saldo total sumando los saldos de todas las fichas

@@ -3,25 +3,28 @@ from tkinter.messagebox import showwarning, showinfo
 import customtkinter
 from controllers.cliente_controller import ClienteController
 from controllers.ficha_odontologica_controller import FichaOdontologicaController
+from controllers.odontograma_controller import OdontogramaController
 from datetime import datetime
 from tkcalendar import DateEntry
 
 def view_fichas_odontologicas(self, cliente_id):
     # Crear ventana para fichas odontológicas
-    fichas_window = customtkinter.CTkToplevel(self)
+    fichas_window_main = customtkinter.CTkToplevel(self)
     cliente = ClienteController.obtener_cliente_por_id(cliente_id)
-    fichas_window.title(f"Fichas odontológicas de {cliente.nombre}")
-    fichas_window.geometry("900x600")
-    fichas_window.minsize(820,500)
-    fichas_window.attributes('-topmost', True)
-    fichas_window.after(100, lambda: fichas_window.attributes('-topmost', False))
-
-        
-    medium_font = ("Arial", 18, "bold")
+    fichas_window_main.title(f"Fichas odontológicas de {cliente.nombre}")
+    fichas_window_main.geometry("1130x600")
+    fichas_window_main.minsize(1130,500)
+    fichas_window_main.attributes('-topmost', True)
+    fichas_window_main.after(100, lambda: fichas_window_main.attributes('-topmost', False))
+    
+    large_font = ("Arial", 18, "bold")
     medium_font = ("Arial", 16)
-    medium_font = ("Arial", 12)
+    small_font = ("Arial", 12)
     
-    
+    tabs = customtkinter.CTkTabview(fichas_window_main, width=900, height=650)
+    tabs.pack(padx=10, pady=10, fill="both", expand=True)
+    tabs._segmented_button.configure(font=medium_font)
+    fichas_window = tabs.add("Fichas Odontológicas")
     def calcular_saldo_total():
         saldo_total=0
         sum_costo=0
@@ -30,9 +33,9 @@ def view_fichas_odontologicas(self, cliente_id):
         for ficha in fichas:
             sum_costo+=ficha.costo
             sum_abono+=ficha.abono   
-        saldo_total=sum_costo-sum_abono
+        saldo_total=sum_abono-sum_costo
         saldo_total_var.set(f"Saldo total: {saldo_total:.2f}")
-        if saldo_total <= 0:
+        if saldo_total >= 0:
             saldo_label.configure(fg_color="#59C07A")  # Fondo verde
         else:
             saldo_label.configure(fg_color="#DD4151")     
@@ -95,7 +98,7 @@ def view_fichas_odontologicas(self, cliente_id):
         
         fichas = FichaOdontologicaController.obtener_fichas_por_cliente(cliente_id)
         for ficha in fichas:
-            tag = "saldo_cero" if (ficha.saldo <= 0 ) else "saldo_no_cero"
+            tag = "saldo_cero" if (ficha.saldo >= 0 ) else "saldo_no_cero"
             tree_ficha_odonto.insert(
                 "",
                 "end",
@@ -131,7 +134,7 @@ def view_fichas_odontologicas(self, cliente_id):
             try:
                 costo = float(entries[2].get() or 0)
                 abono = float(entries[3].get() or 0)
-                saldo = costo - abono
+                saldo = abono - costo
                 saldo_var_fichas.set(f"{saldo:.2f}")  # Actualizar el saldo
             except ValueError:
                 saldo_var_fichas.set("0.00")
@@ -156,7 +159,7 @@ def view_fichas_odontologicas(self, cliente_id):
                 label = customtkinter.CTkLabel(editar_window, text=label_text, font=medium_font)
                 label.pack(pady=5)
                 if i == 0:  # Campo de fecha con calendario
-                    date_entry = DateEntry(editar_window, date_pattern="yyyy-mm-dd", font=medium_font)
+                    date_entry = DateEntry(editar_window, date_pattern="yyyy-mm-dd", font=small_font)
                     date_entry.pack(pady=5)
                     date_entry.set_date(values[i])
                     entries.append(date_entry)
@@ -241,7 +244,7 @@ def view_fichas_odontologicas(self, cliente_id):
         try:
             costo = float(costo_entry.get() or 0)
             abono = float(abono_entry.get() or 0)
-            saldo = costo - abono
+            saldo = abono - costo
             saldo_var_fichas.set(f"{saldo:.2f}")  # Actualizar el valor del saldo
         except ValueError:
             saldo_var_fichas.set("0.00")
@@ -265,7 +268,7 @@ def view_fichas_odontologicas(self, cliente_id):
         label = customtkinter.CTkLabel(form_frame_odntologia, text=label_text, font=medium_font)
         label.grid(row=0, column=i, padx=5)
         if i == 0:  # Campo de fecha con calendario
-            date_entry = DateEntry(form_frame_odntologia, date_pattern="yyyy-mm-dd", font=medium_font)
+            date_entry = DateEntry(form_frame_odntologia, date_pattern="yyyy-mm-dd", font=small_font)
             date_entry.grid(row=1, column=i, padx=5)
             date_entry.set_date(datetime.now())
             entries.append(date_entry)
@@ -289,3 +292,94 @@ def view_fichas_odontologicas(self, cliente_id):
     # Botón para cerrar
     close_button = customtkinter.CTkButton(container_ficha_odo, text="Cerrar", command=fichas_window.destroy, font=medium_font)
     close_button.grid(row=4, column=0, sticky="", padx=10, pady=10)
+    
+    
+    # Función para cambiar el color al hacer clic en un cuadro
+    def cambiar_color(event):
+        color = color_seleccionado.get()
+        cuadro_id = event.widget.find_closest(event.x, event.y)[0]  # Obtener el id del cuadro
+        canvas.itemconfig(cuadro_id, fill=color)  # Cambiar el color en el canvas
+
+        # Guardar el color en la base de datos
+        OdontogramaController.agregar_o_actualizar(cliente_id, cuadro_id, color)
+
+    # Crear la pestaña de odontograma
+    # Agregar la pestaña "Odontograma"
+    tab_odontograma = tabs.add("Odontograma")
+    # Variable para guardar el color seleccionado
+    color_seleccionado = customtkinter.StringVar(value="white")
+
+    # Crear un Frame para alinear los Radiobuttons en una fila
+    frame_radiobuttons = customtkinter.CTkFrame(tab_odontograma)
+    frame_radiobuttons.pack(pady=10)
+    
+    customtkinter.CTkRadioButton(frame_radiobuttons, text="Sano", variable=color_seleccionado, value="white").pack(side='left')
+    customtkinter.CTkRadioButton(frame_radiobuttons, text="Carie", variable=color_seleccionado, value="red").pack(side='left')
+    customtkinter.CTkRadioButton(frame_radiobuttons, text="Verde", variable=color_seleccionado, value="green").pack(side='left')
+    customtkinter.CTkRadioButton(frame_radiobuttons, text="Azul", variable=color_seleccionado, value="blue").pack(side='left')
+    customtkinter.CTkRadioButton(frame_radiobuttons, text="Amarillo", variable=color_seleccionado, value="yellow").pack(side='left')
+
+    canvas = customtkinter.CTkCanvas(tab_odontograma, width=1300, height=400, bg="white")  # Ajusta el tamaño del canvas
+    canvas.pack(pady=20)
+
+    # Crear cuadros en posiciones específicas
+    rectangulos = []
+
+    def crear_fila(x_inicial, y, cantidad, ancho, alto, separacion, numero_ini, numero_fin):
+        if numero_ini != 0:
+            canvas.create_text(x_inicial - 20 - ancho, y, text=str(numero_ini), font=medium_font, anchor="center")
+        for i in range(cantidad):
+            # Crear el cuadro central
+            x = x_inicial + i * (ancho + separacion)
+            rect = canvas.create_oval(x - ancho//2, y - alto//2, x + ancho//2, y + alto//2, fill="white", outline="black") 
+            rectangulos.append(rect)
+            canvas.tag_bind(rect, "<Button-1>", cambiar_color)
+            # Crear el cuadro adicional a la izquierda
+            x_izq = x - (ancho)
+            rect_izq = canvas.create_oval(x_izq - ancho//5, y - alto//2, x_izq + ancho//2, y + alto//2, fill="white", outline="black") 
+            rectangulos.append(rect_izq)
+            canvas.tag_bind(rect_izq, "<Button-1>", cambiar_color)
+            # Crear el cuadro adicional a la derecha
+            x_der = x + (ancho)
+            rect_der = canvas.create_oval(x_der - ancho//2, y - alto//2, x_der + ancho//5, y + alto//2, fill="white", outline="black") 
+            rectangulos.append(rect_der)
+            canvas.tag_bind(rect_der, "<Button-1>", cambiar_color)
+            # Crear el cuadro adicional arriba
+            y_arr = y + (alto)
+            rect_arr = canvas.create_oval(x - ancho//2, y_arr - alto//2, x + ancho//2, y_arr + alto//5, fill="white", outline="black") 
+            rectangulos.append(rect_arr)
+            canvas.tag_bind(rect_arr, "<Button-1>", cambiar_color)
+            # Crear el cuadro adicional abajo
+            y_aba = y - (alto)
+            rect_aba = canvas.create_oval(x - ancho//2, y_aba - alto//5, x + ancho//2, y_aba + alto//2, fill="white", outline="black") 
+            rectangulos.append(rect_aba)
+            canvas.tag_bind(rect_aba, "<Button-1>", cambiar_color)
+        # Crear el número al final de la fila (si no es 0)
+        if numero_fin != 0:
+            x_final = x_inicial + (cantidad - 1) * (ancho + separacion)
+            canvas.create_text(x_final + ancho + 20, y, text=str(numero_fin), font=medium_font, anchor="center")
+    # Crear filas según la distribución indicada
+    crear_fila(75, 100, 8, 20, 20, 36, 1, 0 )   # Primera mitad fila 1
+    crear_fila(625, 100, 8, 20, 20, 36, 0, 2)  # Segunda mitad fila 1
+    
+    crear_fila(245, 175, 5, 20, 20, 36, 5, 0)  # Primera mitad fila 3
+    crear_fila(625, 175, 5, 20, 20, 36, 0, 6)  # Segunda mitad fila 3
+    
+    crear_fila(245, 250, 5, 20, 20, 36, 8, 0)  # Primera mitad fila 4
+    crear_fila(625, 250, 5, 20, 20, 36, 0, 7)  # Segunda mitad fila 4
+    
+    crear_fila(75, 325, 8, 20, 20, 36, 4, 0)   # Primera mitad fila 2
+    crear_fila(625, 325, 8, 20, 20, 36, 0, 3)  # Segunda mitad fila 2
+    def cargar_colores_en_canvas(cliente_id):
+        # Obtener los colores desde la base de datos
+        colores_cliente = OdontogramaController.obtener_por_cliente(cliente_id)
+        for odontograma in colores_cliente:
+            cuadro_id = odontograma.cuadro_id
+            color = odontograma.color
+            # Establecer el color de cada cuadro en el canvas
+            # Encuentra el cuadro correspondiente en el canvas por cuadro_id y actualiza su color
+            canvas.itemconfig(cuadro_id, fill=color)
+
+    # Cuando se abre la ventana, cargamos los colores del cliente:
+    # Este es el ID del cliente actual, debe ser dinámico
+    cargar_colores_en_canvas(cliente_id)

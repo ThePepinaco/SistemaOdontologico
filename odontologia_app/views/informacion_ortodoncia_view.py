@@ -281,7 +281,7 @@ def view_otros_registros(self, cliente_id):
         style = ttk.Style()
         style.configure("ortodoncia.Treeview", rowheight=nueva_altura)
         
-    def cargar_datos():
+    def cargar_datos_tabla():
         """Carga los datos de la tabla ortodoncia desde la base de datos."""
         for row in tree.get_children():
             tree.delete(row)
@@ -327,7 +327,7 @@ def view_otros_registros(self, cliente_id):
     label_resumen.grid(row=1, column=0, sticky="", padx=10, pady=10)
     resumen_entry = customtkinter.CTkEntry(container_tabla_or, font=medium_font)
     resumen_entry.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)
-    cargar_datos()
+    cargar_datos_tabla()
     global entrada_activa
     entrada_activa= None
 
@@ -400,7 +400,7 @@ def view_otros_registros(self, cliente_id):
         TablaOrtodonciaController.actualizar_campos(cliente_id=cliente_id, valores=valores_modificados, resumen=resumen)
 
         showinfo("Éxito", "Todos los cambios han sido guardados.", parent=registros_window)
-        cargar_datos()  # Recargar la tabla
+        cargar_datos_tabla()  # Recargar la tabla
         valores_modificados.clear()
 
     # Botón para guardar todos los cambios
@@ -427,9 +427,9 @@ def view_otros_registros(self, cliente_id):
         for ficha in fichas:
             sum_costo+=ficha.costo
             sum_abono+=ficha.abono   
-        saldo_total=sum_costo-sum_abono
+        saldo_total=sum_abono-sum_costo
         saldo_total_var.set(f"Saldo total: {saldo_total:.2f}")
-        if saldo_total <= 0:
+        if saldo_total >= 0:
             saldo_label.configure(fg_color="#59C07A")  # Fondo verde
         else:
             saldo_label.configure(fg_color="#DD4151")     
@@ -484,7 +484,7 @@ def view_otros_registros(self, cliente_id):
         fichas = FichaOrtodonciaController.obtener_fichas_por_cliente(cliente_id)
         
         for ficha in fichas:
-            tag = "saldo_cero" if ficha.saldo <= 0 else "saldo_no_cero"
+            tag = "saldo_cero" if ficha.saldo >= 0 else "saldo_no_cero"
             tree2.insert(
                 "",
                 "end",
@@ -520,7 +520,7 @@ def view_otros_registros(self, cliente_id):
             try:
                 costo = float(entries[3].get() or 0)
                 abono = float(entries[4].get() or 0)
-                saldo = costo - abono
+                saldo = abono - costo
                 saldo_var.set(f"{saldo:.2f}")  # Actualizar el saldo
             except ValueError:
                 saldo_var.set("0.00")
@@ -602,7 +602,7 @@ def view_otros_registros(self, cliente_id):
 
     # Función para agregar una nueva ficha
     def agregar_ficha():
-
+    
         fecha = date_entry.get_date().strftime("%Y-%m-%d")
         actividad = entries_ficha[1].get()
         brack = entries_ficha[2].get()
@@ -623,6 +623,7 @@ def view_otros_registros(self, cliente_id):
             abono=abono,
             saldo=saldo
         )
+        
 
         # Actualizar tabla
         cargar_datos()
@@ -637,7 +638,7 @@ def view_otros_registros(self, cliente_id):
         try:
             costo = float(costo_entry.get() or 0)
             abono = float(abono_entry.get() or 0)
-            saldo = costo - abono
+            saldo = abono - costo
             saldo_var.set(f"{saldo:.2f}")  # Actualizar el valor del saldo
         except ValueError:
             saldo_var.set("0.00")

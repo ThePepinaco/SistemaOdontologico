@@ -31,3 +31,4 @@ class Cliente(Base):
     tabla_ortodoncia = relationship("TablaOrtodoncia", back_populates="cliente", uselist=False)
     ficha_ortodoncia = relationship("FichaOrtodoncia", back_populates="cliente", uselist=False)
     responsable = relationship("Responsable", back_populates="cliente", uselist=False)
+    odontogramas = relationship("Odontograma", back_populates="cliente", uselist=False)

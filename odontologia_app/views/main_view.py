@@ -13,7 +13,7 @@ class MainView(customtkinter.CTk):
 
         self.title("Gestión Odontológica")
         self.geometry("800x750")
-        self.minsize(1000,400)
+        self.minsize(1090,400)
         # Marco para el formulario de creación
         self.form_frame = customtkinter.CTkFrame(self, width=400)
         self.form_frame.pack(side="left", fill="both", expand=False, padx=10, pady=10)
@@ -40,7 +40,7 @@ class MainView(customtkinter.CTk):
         container.grid_columnconfigure(0, weight=1)  # Ajusta el ancho dinámicamente
 
         # Marco para los datos desplazables
-        form_frame_datos = customtkinter.CTkScrollableFrame(container, width=200, height=600)
+        form_frame_datos = customtkinter.CTkScrollableFrame(container, width=250, height=600)
         form_frame_datos.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
         # Etiqueta del formulario
@@ -49,53 +49,53 @@ class MainView(customtkinter.CTk):
 
         # Campos de información personal
         self.nombre_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Nombre", font=self.medium_font)
-        self.nombre_entry.pack(pady=5)
+        self.nombre_entry.pack(pady=5, fill="x")
 
         self.edad_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Edad", font=self.medium_font)
-        self.edad_entry.pack(pady=5)
+        self.edad_entry.pack(pady=5, fill="x")
 
         self.direccion_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Dirección", font=self.medium_font)
-        self.direccion_entry.pack(pady=5)
+        self.direccion_entry.pack(pady=5, fill="x")
 
         self.telefono_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Teléfono", font=self.medium_font)
-        self.telefono_entry.pack(pady=5)
+        self.telefono_entry.pack(pady=5, fill="x")
         
         self.cedula_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Cédula", font=self.medium_font)
-        self.cedula_entry.pack(pady=5)
+        self.cedula_entry.pack(pady=5, fill="x")
 
         # Campos médicos como entradas de texto
         medical_label = customtkinter.CTkLabel(form_frame_datos, text="Información Médica", font=self.large_font)
         medical_label.pack(pady=10)
 
         self.alergias_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Alergias (especificar)", font=self.medium_font)
-        self.alergias_entry.pack(pady=5)
+        self.alergias_entry.pack(pady=5, fill="x")
 
         self.medicamentos_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Medicamentos Actuales", font=self.medium_font)
-        self.medicamentos_entry.pack(pady=5)
+        self.medicamentos_entry.pack(pady=5, fill="x")
 
         self.hemorragias_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Hemorragias (Sí/No)", font=self.medium_font)
-        self.hemorragias_entry.pack(pady=5)
+        self.hemorragias_entry.pack(pady=5, fill="x")
 
         self.problemas_cardiacos_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Problemas Cardíacos (Sí/No)", font=self.medium_font)
-        self.problemas_cardiacos_entry.pack(pady=5)
+        self.problemas_cardiacos_entry.pack(pady=5, fill="x")
 
         self.diabetes_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Diabetes (Sí/No)", font=self.medium_font)
-        self.diabetes_entry.pack(pady=5)
+        self.diabetes_entry.pack(pady=5, fill="x")
 
         self.hipertension_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Hipertensión (Sí/No)", font=self.medium_font)
-        self.hipertension_entry.pack(pady=5)
+        self.hipertension_entry.pack(pady=5, fill="x")
         
         self.alergia_medicamentos_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Alergía a medicamentos (Sí/No)", font=self.medium_font)
-        self.alergia_medicamentos_entry.pack(pady=5)
+        self.alergia_medicamentos_entry.pack(pady=5, fill="x")
 
         self.embarazo_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Embarazo (Sí/No)", font=self.medium_font)
-        self.embarazo_entry.pack(pady=5)
+        self.embarazo_entry.pack(pady=5, fill="x")
 
         self.anestesia_previa_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Anestesia previa (Sí/No)", font=self.medium_font)
-        self.anestesia_previa_entry.pack(pady=5)
+        self.anestesia_previa_entry.pack(pady=5, fill="x")
 
         self.anemia_entry = customtkinter.CTkEntry(form_frame_datos, placeholder_text="Anemia (Sí/No)", font=self.medium_font)
-        self.anemia_entry.pack(pady=5)
+        self.anemia_entry.pack(pady=5, fill="x")
 
         # Botón para guardar el cliente (fuera del scrollable frame)
         save_button = customtkinter.CTkButton(container, text="Guardar Cliente", command=self.save_cliente, font=self.medium_font)

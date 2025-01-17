@@ -44,7 +44,7 @@ def view_fichas_odontologicas(self, cliente_id):
     saldo_total=0
     # Etiqueta para el título
     saldo_total_var = customtkinter.StringVar(value=f"Saldo total: {saldo_total:.2f}")
-    label = customtkinter.CTkLabel(fichas_window, text=f"Fichas Odontológicas de: {cliente.nombre}", font=medium_font)
+    label = customtkinter.CTkLabel(fichas_window, text=f"Fichas Odontológicas de: {cliente.nombre}", font=large_font)
     label.pack(pady=10)
     saldo_label = customtkinter.CTkLabel(fichas_window, textvariable=saldo_total_var, font=("Arial", 16))
     saldo_label.pack(pady=10)
@@ -307,19 +307,33 @@ def view_fichas_odontologicas(self, cliente_id):
     # Agregar la pestaña "Odontograma"
     tab_odontograma = tabs.add("Odontograma")
     # Variable para guardar el color seleccionado
-    color_seleccionado = customtkinter.StringVar(value="white")
+    color_seleccionado = customtkinter.StringVar(value="#d7dada")
 
     # Crear un Frame para alinear los Radiobuttons en una fila
     frame_radiobuttons = customtkinter.CTkFrame(tab_odontograma)
     frame_radiobuttons.pack(pady=10)
-    
-    customtkinter.CTkRadioButton(frame_radiobuttons, text="Sano", variable=color_seleccionado, value="white").pack(side='left')
-    customtkinter.CTkRadioButton(frame_radiobuttons, text="Carie", variable=color_seleccionado, value="red").pack(side='left')
-    customtkinter.CTkRadioButton(frame_radiobuttons, text="Verde", variable=color_seleccionado, value="green").pack(side='left')
-    customtkinter.CTkRadioButton(frame_radiobuttons, text="Azul", variable=color_seleccionado, value="blue").pack(side='left')
-    customtkinter.CTkRadioButton(frame_radiobuttons, text="Amarillo", variable=color_seleccionado, value="yellow").pack(side='left')
 
-    canvas = customtkinter.CTkCanvas(tab_odontograma, width=1300, height=400, bg="white")  # Ajusta el tamaño del canvas
+    # Función para crear radio buttons con puntos de color
+    def crear_radiobutton(frame, text, value, color):
+        container = customtkinter.CTkFrame(frame)
+        container.pack(side='left', padx=5)
+        
+        # Punto de color
+        color_label = customtkinter.CTkLabel(container, text="", width=10, height=10, corner_radius=5, bg_color=color)
+        color_label.pack(side='left', padx=5)
+        
+        # Radio button
+        radio_button = customtkinter.CTkRadioButton(container, text=text, variable=color_seleccionado, value=value)
+        radio_button.pack(side='left')
+
+    # Crear los radio buttons con puntos de color
+    crear_radiobutton(frame_radiobuttons, text="Sano", value="#d7dada", color="#d7dada")
+    crear_radiobutton(frame_radiobuttons, text="Carie", value="red", color="red")
+    crear_radiobutton(frame_radiobuttons, text="Verde", value="green", color="green")
+    crear_radiobutton(frame_radiobuttons, text="Azul", value="blue", color="blue")
+    crear_radiobutton(frame_radiobuttons, text="Amarillo", value="yellow", color="yellow")
+
+    canvas = customtkinter.CTkCanvas(tab_odontograma, width=1300, height=400, bg="#2b2b2b", highlightthickness=0)  # Ajusta el tamaño del canvas
     canvas.pack(pady=20)
 
     # Crear cuadros en posiciones específicas
@@ -327,37 +341,37 @@ def view_fichas_odontologicas(self, cliente_id):
 
     def crear_fila(x_inicial, y, cantidad, ancho, alto, separacion, numero_ini, numero_fin):
         if numero_ini != 0:
-            canvas.create_text(x_inicial - 20 - ancho, y, text=str(numero_ini), font=medium_font, anchor="center")
+            canvas.create_text(x_inicial - 20 - ancho, y, text=str(numero_ini), font=medium_font, anchor="center", fill="#d7dada")
         for i in range(cantidad):
             # Crear el cuadro central
             x = x_inicial + i * (ancho + separacion)
-            rect = canvas.create_oval(x - ancho//2, y - alto//2, x + ancho//2, y + alto//2, fill="white", outline="black") 
+            rect = canvas.create_oval(x - ancho//2, y - alto//2, x + ancho//2, y + alto//2, fill="#d7dada", outline="black") 
             rectangulos.append(rect)
             canvas.tag_bind(rect, "<Button-1>", cambiar_color)
             # Crear el cuadro adicional a la izquierda
             x_izq = x - (ancho)
-            rect_izq = canvas.create_oval(x_izq - ancho//5, y - alto//2, x_izq + ancho//2, y + alto//2, fill="white", outline="black") 
+            rect_izq = canvas.create_oval(x_izq - ancho//5, y - alto//2, x_izq + ancho//2, y + alto//2, fill="#d7dada", outline="black") 
             rectangulos.append(rect_izq)
             canvas.tag_bind(rect_izq, "<Button-1>", cambiar_color)
             # Crear el cuadro adicional a la derecha
             x_der = x + (ancho)
-            rect_der = canvas.create_oval(x_der - ancho//2, y - alto//2, x_der + ancho//5, y + alto//2, fill="white", outline="black") 
+            rect_der = canvas.create_oval(x_der - ancho//2, y - alto//2, x_der + ancho//5, y + alto//2, fill="#d7dada", outline="black") 
             rectangulos.append(rect_der)
             canvas.tag_bind(rect_der, "<Button-1>", cambiar_color)
             # Crear el cuadro adicional arriba
             y_arr = y + (alto)
-            rect_arr = canvas.create_oval(x - ancho//2, y_arr - alto//2, x + ancho//2, y_arr + alto//5, fill="white", outline="black") 
+            rect_arr = canvas.create_oval(x - ancho//2, y_arr - alto//2, x + ancho//2, y_arr + alto//5, fill="#d7dada", outline="black") 
             rectangulos.append(rect_arr)
             canvas.tag_bind(rect_arr, "<Button-1>", cambiar_color)
             # Crear el cuadro adicional abajo
             y_aba = y - (alto)
-            rect_aba = canvas.create_oval(x - ancho//2, y_aba - alto//5, x + ancho//2, y_aba + alto//2, fill="white", outline="black") 
+            rect_aba = canvas.create_oval(x - ancho//2, y_aba - alto//5, x + ancho//2, y_aba + alto//2, fill="#d7dada", outline="black") 
             rectangulos.append(rect_aba)
             canvas.tag_bind(rect_aba, "<Button-1>", cambiar_color)
         # Crear el número al final de la fila (si no es 0)
         if numero_fin != 0:
             x_final = x_inicial + (cantidad - 1) * (ancho + separacion)
-            canvas.create_text(x_final + ancho + 20, y, text=str(numero_fin), font=medium_font, anchor="center")
+            canvas.create_text(x_final + ancho + 20, y, text=str(numero_fin), font=medium_font, anchor="center", fill="#d7dada")
     # Crear filas según la distribución indicada
     crear_fila(75, 100, 8, 20, 20, 36, 1, 0 )   # Primera mitad fila 1
     crear_fila(625, 100, 8, 20, 20, 36, 0, 2)  # Segunda mitad fila 1
